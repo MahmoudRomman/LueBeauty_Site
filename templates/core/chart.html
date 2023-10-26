@@ -1,0 +1,46 @@
+{% extends 'partials/base.html' %}
+
+
+
+
+{% block content %}
+
+
+
+<h1 class="text-center mb-5 wow fadeInUp mt-5" data-wow-delay="0.1s">احصائياتك هذا الشهر حتى الان</h1>
+
+
+<div style="width: 50%; margin: 0 auto; margin-bottom: 8%;">
+    <canvas id="myChart"></canvas>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/chart-data/')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('myChart').getContext('2d');
+                
+                new Chart(ctx, {
+                    type: data.chart_type,
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: data.label,
+                            data: data.values,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+    });
+</script>
+
+{% endblock content %}
+    
