@@ -44,20 +44,15 @@
                     <td>{{ link_data.amount }}</td>
                     <td>{{ link_data.date|date }}</td>
                     <td>
-                        <div class="btn_payment">
-                            <a href="">
-                                نسخ الرابط
-                            </a>
-                          </div>
+
+                      <button class="btn_payment_button copy-btn" id="btn_after" data-container="{{link_data.AED_link}}">نسخ الرابط</button>
+
                     </td>
                     <td>
-                        <div class="btn_payment">
-                            <a href="">
-                                نسخ الرابط
-                            </a>
-                          </div>
-                    </td>
 
+                      <button class="btn_payment_button copy-btn" id="btn_after" data-container="{{link_data.SAR_link}}">نسخ الرابط</button>
+
+                    </td>
                     {% if user.is_authenticated and user.is_staff and user.is_superuser %}    
                     <td>
                       <a href="{% url 'delete_payment_link' link_data.slug_link %}">
@@ -70,7 +65,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan='6' style="font-size:large">ليس لديك اى روابط دفع</td>
+                    <td colspan='8' style="font-size:large">ليس لديك اى روابط دفع</td>
                 </tr>
                 <tr>
                     <td colspan="6">
@@ -99,14 +94,44 @@
         
 
 
+    <script>
+      const copyBtns_AED = [...document.getElementsByClassName('copy-btn')]
+      
+      let previous_AED = null 
+      copyBtns_AED.forEach(btn=> btn.addEventListener('click', ()=>{
+        const AED_text = btn.getAttribute('data-container')
+        navigator.clipboard.writeText(AED_text)
+        btn.textContent = "تم النسخ"
+
+
+
+
+        if (previous_AED) {
+          previous_AED.textContent = "نسخ الرابط"
+
+        }
+        previous_AED = btn
+      }))
+
+
+      // to change the color of the button after copy it
+      const btn_after = document.getElementById('btn_after');
+
+      btn_after.addEventListener('click', function onClick() {
+        btn_after.style.backgroundColor = '#27AE60';
+        btn_after.style.color = 'white';
+      });
+
+
+
+
+    </script>
+
 
     </div>
   </section>
 
   <!-- end shop section -->
-
-
-
 
 
 {% endblock content %}

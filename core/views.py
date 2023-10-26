@@ -498,8 +498,17 @@ def delete_payment_link(request, slug):
 
 
 
-def copy_link(request):
-    pass
+def copy_link(request, slug):
+    data = models.AddLink.objects.filter(slug_link=slug)
+
+
+    text = str(data[0])
+
+    context = {
+        'text' : text
+    }
+
+    return render(request, 'core/banks.html', context)
 
 
 from django.http import JsonResponse

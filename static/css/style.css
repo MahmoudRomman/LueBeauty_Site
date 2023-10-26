@@ -845,6 +845,32 @@ margin-top: 0px;
 
 
 
+.btn_payment_button {
+  display: inline-block;
+  padding: 10px 40px;
+  background-color: #468B97;
+  color: #ffffff;
+  border: 1px solid #468B97;
+  border-radius: 5px;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  
+}
+
+
+
+.btn_payment_button:hover {
+  background-color: transparent;
+  color: #468B97;
+}
+
+
+
+
+
+
+
+
 
 
 .saving_section {
