@@ -666,8 +666,7 @@ a:focus {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  font-size:large;
-  margin-right: -240px;
+
 }
 
 
@@ -680,6 +679,8 @@ a:focus {
   border-radius: 5px;
   -webkit-transition: all .3s;
   transition: all .3s;
+  width: 300px;
+
   
 }
 
@@ -696,6 +697,47 @@ a:focus {
 
 
 
+
+
+
+
+
+
+.btn_save_link {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+
+}
+
+
+.btn_save_link input {
+  display: inline-block;
+  padding: 10px 40px;
+  background-color: #27AE60;
+  color: #ffffff;
+  border: 1px solid #27AE60;
+  border-radius: 5px;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  width: 300px;
+  
+}
+
+
+
+.btn_save_link input:hover {
+  background-color: transparent;
+  color: #27AE60;
+}
+
+
+
+
+
 .btn_bill_finish {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -704,7 +746,6 @@ a:focus {
       -ms-flex-pack: center;
           justify-content: center;
 
-margin: auto;
 }
 
 
@@ -793,6 +834,7 @@ margin-top: 0px;
   border-radius: 5px;
   -webkit-transition: all .3s;
   transition: all .3s;
+  width: 250px;
   
 }
 

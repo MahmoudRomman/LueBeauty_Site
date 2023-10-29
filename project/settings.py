@@ -27,6 +27,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_countries',
+    'phone_field',
+
     'core',
 ]
 
@@ -96,7 +99,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'EET'
+TIME_ZONE = 'Africa/Cairo'
 
 USE_I18N = True
 
@@ -120,6 +123,7 @@ CKEDITOR_BASEPATH = "/staticfiles/ckeditor/ckeditor/"
 # MEDIA FILES
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

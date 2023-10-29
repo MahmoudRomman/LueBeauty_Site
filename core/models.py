@@ -4,6 +4,14 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.shortcuts import reverse
 from django.utils import timezone
+from django_countries.fields import CountryField
+
+
+
+
+
+
+# from phone_field import PhoneField
 
 # Create your models here.
 
@@ -144,7 +152,7 @@ class Order(models.Model):
     ordered_date = models.DateTimeField(default=timezone.now())
     done_ordered_time = models.DateTimeField(default=timezone.now())
     ordered = models.BooleanField(default=False)
-    billing_address = models.ForeignKey('BillingAddress', on_delete=models.SET_NULL, blank=True, null=True)
+    billing_address = models.ForeignKey('Bill', on_delete=models.SET_NULL, blank=True, null=True)
     coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL, blank=True, null=True)
     
     def __str__(self):
@@ -157,20 +165,27 @@ class Order(models.Model):
         if self.coupon:
             total -= self.coupon.amount
         return total
+
+    def get_total_items(self):
+        total_items = 0
+        for order_item in self.items.all():
+            total_items += order_item.quantity
+        return total_items
     
 
 
-class BillingAddress(models.Model):
-    seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    # country = CountryField(multiple=False)
-    address = models.CharField(max_length=200)
-    phone = models.CharField(max_length=200)
-    zip = models.CharField(max_length=200)
 
+class Bill(models.Model):
+    seller = models.ForeignKey(User, on_delete=models.CASCADE)
+    seller_phone_number = models.ForeignKey("PhoneNumber", on_delete=models.CASCADE)
+    country = CountryField(multiple=False, blank_label="(select country)")
+    address = models.CharField(max_length=200)
+    customer_phone = models.CharField(max_length=31)
+    date = models.DateTimeField(default=timezone.now())
+    pieces_num = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.user.username
-
 
 
 
@@ -182,6 +197,28 @@ class Coupon(models.Model):
 
     def __str__(self):
         return self.code
+
+
+
+class PhoneNumber(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=31)
+
+    def __str__(self):
+        return f"{self.user} -- {self.phone}"
+    
+
+
+class Account(models.Model):
+    account_name = models.CharField(max_length=200)
+    account_link = models.URLField(max_length=1000, null=False, blank=False)
+    marketer = models.ForeignKey(User, on_delete=models.CASCADE)
+    phone_number = models.ManyToManyField(PhoneNumber)
+
+    def __str__(self):
+        return f"{self.account_name} -- {self.marketer}"
+
+
 
 
 class Product(models.Model):

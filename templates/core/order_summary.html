@@ -115,6 +115,10 @@
 
                 {% if object.get_total %}
                 <tr>
+                    <td colspan="10"><b>اجمالى عدد القطع</b></td>
+                    <td><b>{{object.get_total_items}}</b></td>
+                </tr>
+                <tr>
                     <td colspan="10"><b>السعر الكلى</b></td>
                     <td><b>${{ object.get_total }}</b></td>
                 </tr>
@@ -125,7 +129,7 @@
                         </div> 
 
                         <div class="btn_go_to_bill float-right mt-2">
-                            <a href='#'>الانتهاء من الفاتورة</a>
+                            <a href="{% url 'bill' %}">الانتهاء من الفاتورة</a>
                         </div> 
 
                     </td>

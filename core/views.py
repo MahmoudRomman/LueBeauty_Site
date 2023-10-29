@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
@@ -6,12 +7,24 @@ from . import models
 from . import forms
 from datetime import datetime 
 import datetime, calendar
-
 from django.utils import timezone
+import string
+import random
 
 
 
 # Create your views here.
+
+
+
+def create_slug_code():
+    return "".join(random.choices(string.ascii_lowercase + string.digits, k=20))
+
+
+
+
+
+
 
 def home(request):
     return render(request, 'core/index.html')
@@ -109,12 +122,6 @@ def add_product(request):
 
 
 
-import string
-import random
-
-
-def create_slug_code():
-    return "".join(random.choices(string.ascii_lowercase + string.digits, k=20))
 
 def add_item(request):
 
@@ -419,11 +426,6 @@ def remove_from_cart(request, slug):
 
 
 
-
-
-
-
-
 def order_summary(request):
     order = models.Order.objects.get(user=request.user, ordered=False)
 
@@ -436,8 +438,22 @@ def order_summary(request):
     return render(request, 'core/order_summary.html', context)
 
 
+
+
+
 def bill(request):
-    return render(request, 'core/bill.html')
+
+    if request.method == "POST":
+        form = forms.BillForm(request.POST)
+    else:
+        form = forms.BillForm()
+
+
+
+    context = {
+        'form' : form,
+    }
+    return render(request, 'core/bill.html', context)
 
 
 
@@ -495,23 +511,6 @@ def delete_payment_link(request, slug):
     models.AddLink.objects.filter(slug_link=slug).delete()
     messages.info(request, "item deleted successfully")
     return redirect("banks_and_payments")
-
-
-
-def copy_link(request, slug):
-    data = models.AddLink.objects.filter(slug_link=slug)
-
-
-    text = str(data[0])
-
-    context = {
-        'text' : text
-    }
-
-    return render(request, 'core/banks.html', context)
-
-
-from django.http import JsonResponse
 
 
 
