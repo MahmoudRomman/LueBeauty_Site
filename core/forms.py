@@ -344,9 +344,10 @@ from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 
 
+
+
+
 # class BillForm(forms.Form):
-
-
 #     country = CountryField(blank_label="(اختر الدولة)").formfield(
 #         widget=CountrySelectWidget(attrs={
 #             'class': 'form-control',
@@ -372,8 +373,8 @@ from django_countries.widgets import CountrySelectWidget
 
 #     }))
 
-#     # seller_phone = forms.ChoiceField(
-#     #     choices = models.PhoneNumber.get_phones,
+#     # seller_phone_number = forms.ChoiceField(
+#     #     choices = models.PhoneNumber.objects.all(),
 #     #     required = True,
 #     #     widget = forms.Select(attrs={
 #     #     'class': 'form-control',
@@ -382,31 +383,101 @@ from django_countries.widgets import CountrySelectWidget
         
 #     # }))
 
+    
+#     # seller_phone_number = forms.ModelChoiceField(
+#     #     queryset = models.PhoneNumber.objects.filter(user),
+#     #     to_field_name='phone',
+#     #     required=True,  
+#     #     widget=forms.Select(attrs={'class': 'form-control'})
+#     # )
+
+
+
+
+# class BillForm(forms.ModelForm):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+
+#         self.fields["country"] = CountryField(blank_label="(اختر الدولة)").formfield(
+#             widget=CountrySelectWidget(attrs={
+#                 'class': 'form-control',
+#                 'name' : 'country',
+#                 'type' : 'radio',
+#                 'style': 'border-color:wightblack; border-radius: 10px;'
+
+#                 }))
+        
+#         self.fields["address"] = forms.CharField(required=True, widget=forms.TextInput(attrs={
+#             'class': 'form-control',
+#             'type' : 'text',
+#             'size': "200",
+#             'placeholder': "ادخل العنوان",
+#             'style': 'border-color:wightblack; border-radius: 10px;'
+#         }))
+
+
+#         self.fields["customer_phone"].widget.attrs.update({
+#             'class': 'form-control',
+#             'size': "31",
+#             'placeholder': "ادخل رقم هاتف العميل",
+#             'style': 'border-color:wightblack; border-radius: 10px;',
+
+#         })
+
+#         self.fields["seller_phone_number"].widget.attrs.update({
+#             'class': 'form-control',
+#             'style': 'border-color:wightblack; border-radius: 10px;',       
+
+#         })
+
+
+        
+#         # self.fields["seller_phone_number"] = forms.ModelChoiceField(
+#         #     queryset = models.PhoneNumber.objects.filter(user=self.user),
+#         #     to_field_name='phone',
+#         #     required=True,  
+#         #     widget=forms.Select(attrs={'class': 'form-control'})
+#         # )
+
+#     class Meta:
+#          model = models.Bill
+#          fields = ['country', 'address', 'customer_phone', 'seller_phone_number']
+
+
+
+
+
+
+
+
 
 
 
 class BillForm(forms.ModelForm):
 
-
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
-        
-        self.fields["country"].widget.attrs.update({
+
+
+
+        self.fields["country"] = CountryField(blank_label="(اختر الدولة)").formfield(
+            widget=CountrySelectWidget(attrs={
                 'class': 'form-control',
                 'name' : 'country',
                 'type' : 'radio',
                 'style': 'border-color:wightblack; border-radius: 10px;'
 
-                })
+                }))
         
-
-        self.fields["address"].widget.attrs.update({
+        self.fields["address"] = forms.CharField(required=True, widget=forms.TextInput(attrs={
             'class': 'form-control',
             'type' : 'text',
             'size': "200",
             'placeholder': "ادخل العنوان",
             'style': 'border-color:wightblack; border-radius: 10px;'
-        })
+        }))
+
 
         self.fields["customer_phone"].widget.attrs.update({
             'class': 'form-control',
@@ -416,17 +487,34 @@ class BillForm(forms.ModelForm):
 
         })
 
-        # seller_phone = forms.ChoiceField(
-        #     choices = models.PhoneNumber.get_phones,
-        #     required = True,
-        #     widget = forms.Select(attrs={
-        #     'class': 'form-control',
-        #     'type' : 'radio',
-        #     'label' : 'select one',
+        
+
+
+        data = models.PhoneNumber.objects.filter(user=self.request.user)
+        
+             
+        choices_list = []
+        for c in data:
+            choices_list.append((str(c), str(c)))
+
+        choices_tuple = tuple(choices_list)
+        # choices_tuple = models.PhoneNumber(choices_tuple)
+
+             
+        self.fields["seller_phone_number"] = forms.ChoiceField(
+            choices = choices_tuple,
+            required = True,
+            widget = forms.Select(attrs={
+            'class': 'form-control',
+            'type' : 'radio',
+            'label' : 'select one',
             
-        # }))
+        }))
+
+
 
     class Meta:
-         model = models.Bill
-         fields = ['country', 'address', 'customer_phone']
+         model = models.Billl
+         fields = ['seller', 'country', 'address', 'customer_phone', 'seller_phone_number']
+        
 

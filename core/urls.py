@@ -22,7 +22,11 @@ urlpatterns = [
     path('remove_from_cart/<slug>/', views.remove_from_cart, name="remove_from_cart"),
 
 
-    path('bill/', views.bill, name="bill"),
+    # path('bill/', views.bill, name="bill"),
+    path('bill/', views.bill.as_view(), name="bill"),
+    
+    path('all_bills/', views.show_bills, name="all_bills"),
+
 
     
     path('banks_and_payments/', views.banks, name="banks_and_payments"),

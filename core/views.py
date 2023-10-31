@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
+from django.urls import reverse_lazy
 from . import models
 from . import forms
 from datetime import datetime 
@@ -19,11 +20,6 @@ import random
 
 def create_slug_code():
     return "".join(random.choices(string.ascii_lowercase + string.digits, k=20))
-
-
-
-
-
 
 
 def home(request):
@@ -440,21 +436,78 @@ def order_summary(request):
 
 
 
+# from django.views import View
+from django.views.generic import View
+from django.views.generic.edit import CreateView
 
-def bill(request):
 
-    if request.method == "POST":
-        form = forms.BillForm(request.POST)
-    else:
-        form = forms.BillForm()
+class bill(CreateView):
+    
+    model = models.Billl
+    form_class = forms.BillForm
+    template_name = 'core/bill.html'
+    success_url = reverse_lazy('home')
+    
 
+    def form_valid(self, form):
+        order = models.Order.objects.get(user=self.request.user, ordered=False)
+        # order_item = models.OrderItem.objects.get(user=self.request.user, ordered=False)
+
+        seller_phone_number = form.cleaned_data.get("seller_phone_number")
+        
+
+        phone = models.PhoneNumber.objects.get(phone = str(seller_phone_number))
+        account = models.Account.objects.get(phone_number = phone)
+        
+
+        num = order.get_total_items()
+
+
+        form.instance.seller = self.request.user
+        form.instance.pieces_num = num
+        form.instance.account_name = account.account_name
+
+
+        # order_item.ordered = True
+        order.ordered = True
+
+        # order_item.save()
+        order.save()
+
+
+
+        messages.success(self.request, "The task was created successfully.")
+        return super(bill,self).form_valid(form)
+    
+    
+    
+
+    def get_form_kwargs(self):
+        """ Passes the request object to the form class.
+         This is necessary to only display members that belong to a given user"""
+
+        kwargs = super(bill, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+    
+    
+    
+    
+def show_bills(request):
+    bills = models.Billl.objects.all()
+
+
+    phone = models.PhoneNumber.objects.get(phone = "8585858585")
+    acc = models.Account.objects.get(phone_number = phone)
+    print(acc.account_name)
+    print("***********************************************************************")
 
 
     context = {
-        'form' : form,
+        'bills' : bills
     }
-    return render(request, 'core/bill.html', context)
 
+    return render(request, 'core/show_bills.html', context)
 
 
 

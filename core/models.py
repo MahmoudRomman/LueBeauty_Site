@@ -152,7 +152,7 @@ class Order(models.Model):
     ordered_date = models.DateTimeField(default=timezone.now())
     done_ordered_time = models.DateTimeField(default=timezone.now())
     ordered = models.BooleanField(default=False)
-    billing_address = models.ForeignKey('Bill', on_delete=models.SET_NULL, blank=True, null=True)
+    billing_address = models.ForeignKey('Billl', on_delete=models.SET_NULL, blank=True, null=True)
     coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL, blank=True, null=True)
     
     def __str__(self):
@@ -175,19 +175,44 @@ class Order(models.Model):
 
 
 
-class Bill(models.Model):
-    seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    seller_phone_number = models.ForeignKey("PhoneNumber", on_delete=models.CASCADE)
+
+
+# class Bill(models.Model):
+#     seller = models.ForeignKey(User, on_delete=models.CASCADE)
+#     # seller_phone_number = models.ForeignKey("PhoneNumber", on_delete=models.CASCADE, null=True, blank=True)
+#     seller_phone_number = models.CharField(max_length=31, null=True, blank=True)
+#     country = CountryField(multiple=False, blank_label="(select country)")
+#     address = models.CharField(max_length=200)
+#     customer_phone = models.CharField(max_length=31)
+#     date = models.DateTimeField(default=timezone.now())
+#     pieces_num = models.PositiveIntegerField(default=0)
+
+#     # items = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+#     # slug = models.SlugField()
+    
+#     def __str__(self):
+#         return f"{self.seller}"
+
+
+
+class Billl(models.Model):
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    seller_phone_number = models.CharField(max_length=31, null=True, blank=True)
     country = CountryField(multiple=False, blank_label="(select country)")
     address = models.CharField(max_length=200)
     customer_phone = models.CharField(max_length=31)
     date = models.DateTimeField(default=timezone.now())
     pieces_num = models.PositiveIntegerField(default=0)
 
+    account_name = models.CharField(max_length=150, null=True, blank=True)
+
+    # items = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+    # slug = models.SlugField()
+    
     def __str__(self):
-        return self.user.username
-
-
+        return f"{self.seller}"
 
 
 class Coupon(models.Model):
@@ -197,26 +222,28 @@ class Coupon(models.Model):
 
     def __str__(self):
         return self.code
+    
 
 
 
 class PhoneNumber(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=31)
-
-    def __str__(self):
-        return f"{self.user} -- {self.phone}"
     
+    def __str__(self):
+        return f"{self.phone}"
+
 
 
 class Account(models.Model):
     account_name = models.CharField(max_length=200)
     account_link = models.URLField(max_length=1000, null=False, blank=False)
-    marketer = models.ForeignKey(User, on_delete=models.CASCADE)
-    phone_number = models.ManyToManyField(PhoneNumber)
+    marketer = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    phone_number = models.ForeignKey(PhoneNumber, on_delete=models.CASCADE, null=True, blank=True)
+
 
     def __str__(self):
-        return f"{self.account_name} -- {self.marketer}"
+        return f"{self.phone_number}"
 
 
 
