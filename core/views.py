@@ -1,5 +1,8 @@
+from typing import Any
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
+from django.views.generic.edit import CreateView
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
@@ -23,6 +26,7 @@ def create_slug_code():
 
 
 def home(request):
+
     return render(request, 'core/index.html')
 
 
@@ -71,50 +75,6 @@ def store(request):
         }
 
         return render(request, 'core/store.html', context)
-
-
-
-
-def add_product(request):
-
-    form = forms.ProductForm(request.POST or None, request.FILES or None)
-
-    if request.method == "POST":
-        if form.is_valid():
-            name = form.cleaned_data.get("name")
-            wig_type = form.cleaned_data.get("wig_type")
-            wig_long = form.cleaned_data.get("wig_long")
-            scalp_type = form.cleaned_data.get("scalp_type")
-            wig_color = form.cleaned_data.get("wig_color")
-            density = form.cleaned_data.get("density")
-            price = form.cleaned_data.get("price")
-            quantity = form.cleaned_data.get("quantity")
-
-            if density=='اختر كثافة الباروكة' or wig_color=='اختر لون الباروكة' or scalp_type=='اختر نوع الفروة' or wig_long=='طول الباروكة' or wig_type=='اختر نوع الباروكة':
-                 messages.info(request, "هناك خطأ من فضلك راجع المدخلات مره أخرى")
-            else:
-                new_product = models.Product.objects.create(
-                    name = name,
-                    wig_type = wig_type,
-                    wig_long = wig_long,
-                    scalp_type = scalp_type,
-                    wig_color = wig_color,
-                    density = density,
-                    price = price,
-                    quantity = quantity,
-                    )
-
-                new_product.save()
-                messages.success(request, "تم اضافة المنتج الجديد بنجاح")
-                return redirect("store")
-
-
-
-    context = {
-        'form' : form,
-    }
-
-    return render(request, 'core/add_product.html', context)
 
 
 
@@ -277,8 +237,6 @@ def shop(request):
     
 
 
-
-
 # This function used to set the item to the cart in addition update the product quantity in the store...
 # Done perfectly.....
 def add_to_cart(request, slug):
@@ -304,7 +262,6 @@ def add_to_cart(request, slug):
 
                 # Update the quantity for the item in the cart
                 models.Item.objects.filter(slug=slug).update(quantity = (item.quantity - 1))
-
 
                 messages.success(request, "تم تعديل الكمية لهذا المنتج بنجاح")
                 return redirect("order_summary")
@@ -423,91 +380,228 @@ def remove_from_cart(request, slug):
 
 
 def order_summary(request):
-    order = models.Order.objects.get(user=request.user, ordered=False)
+    try:
+        order = models.Order.objects.get(user=request.user, ordered=False)
 
-    context = {
-        'object' : order,
-        # 'couponform' : forms.CouponForm(),
-        # 'DISPLAY_COUPON_FORM' : True,
-    }
+        context = {
+            'object' : order,
+            # 'couponform' : forms.CouponForm(),
+            # 'DISPLAY_COUPON_FORM' : True,
+        }
 
-    return render(request, 'core/order_summary.html', context)
-
-
-
-
-# from django.views import View
-from django.views.generic import View
-from django.views.generic.edit import CreateView
+        return render(request, 'core/order_summary.html', context)
+    except ObjectDoesNotExist:
+        messages.warning(request, ".ليس لديك طلب شراء مٌفعل, من فضلك أضف أحد المنتجات الى السلة أولاً")
+        return redirect("shop")
 
 
-class bill(CreateView):
+
+
+
+# class bill(CreateView):
     
-    model = models.Billl
-    form_class = forms.BillForm
+#     model = models.Billl
+#     form_class = forms.BillForm
+#     template_name = 'core/bill.html'
+#     success_url = reverse_lazy('chart_view')
+    
+
+#     def form_valid(self, form):
+#         order = models.Order.objects.get(user=self.request.user, ordered=False)
+#         # order_item = models.OrderItem.objects.get(user=self.request.user, ordered=False)
+
+#         seller_phone_number = form.cleaned_data.get("seller_phone_number")
+        
+
+#         phone = models.PhoneNumber.objects.get(phone = str(seller_phone_number))
+#         account = models.Account.objects.get(phone_number = phone)
+        
+
+#         num = order.get_total_items()
+
+
+#         form.instance.seller = self.request.user
+#         form.instance.pieces_num = num
+#         form.instance.account_name = account.account_name
+
+
+#         # order_item.ordered = True
+#         order.ordered = True
+
+#         # order_item.save()
+#         order.save()
+
+
+
+#         messages.success(self.request, ".تم حفظ الفاتورة بنجاح")
+#         return super(bill,self).form_valid(form)    
+
+#     def get_form_kwargs(self):
+#         """ Passes the request object to the form class.
+#          This is necessary to only display members that belong to a given user"""
+
+#         kwargs = super(bill, self).get_form_kwargs()
+#         kwargs['request'] = self.request
+#         return kwargs
+    
+    
+
+
+
+
+
+class bill2(CreateView):
+    
+    model = models.Bill2
+    form_class = forms.BillForm2
     template_name = 'core/bill.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('chart_view')
+    order = None
+
+    def get_form_kwargs(self):
+        """ Passes the request object to the form class.
+         This is necessary to only display members that belong to a given user"""
+
+        kwargs = super(bill2, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+    
     
 
     def form_valid(self, form):
         order = models.Order.objects.get(user=self.request.user, ordered=False)
         # order_item = models.OrderItem.objects.get(user=self.request.user, ordered=False)
 
+
+        orders_num = order.items.all()
+        one_bill = orders_num[0]
+        
         seller_phone_number = form.cleaned_data.get("seller_phone_number")
+
+        country = form.cleaned_data.get("country")
+        address = form.cleaned_data.get("address")
+        customer_phone = form.cleaned_data.get("customer_phone")
+        customer_name = form.cleaned_data.get("customer_name")
+
         
 
         phone = models.PhoneNumber.objects.get(phone = str(seller_phone_number))
         account = models.Account.objects.get(phone_number = phone)
-        
-
-        num = order.get_total_items()
 
 
         form.instance.seller = self.request.user
-        form.instance.pieces_num = num
         form.instance.account_name = account.account_name
 
+        form.instance.wig_type = one_bill.item.wig_type
+        form.instance.wig_long = one_bill.item.wig_long
+        form.instance.scalp_type = one_bill.item.scalp_type
+        form.instance.wig_color = one_bill.item.wig_color
+        form.instance.density = one_bill.item.density
+        form.instance.price = one_bill.item.price
+        form.instance.pieces_num = one_bill.quantity
 
-        # order_item.ordered = True
+
+
+        country = form.cleaned_data.get("country")
+        address = form.cleaned_data.get("address")
+        customer_phone = form.cleaned_data.get("customer_phone")
+        customer_name = form.cleaned_data.get("customer_name")
+        orders_num = orders_num[1:]
+        for other_orders in orders_num:
+            new_bill2 = models.Bill2.objects.create(
+                seller = self.request.user,
+                seller_phone_number = seller_phone_number,
+                country = country,
+                address = address,
+                customer_phone = customer_phone,
+                customer_name = customer_name,
+                account_name = account.account_name,
+
+                wig_type = other_orders.item.wig_type,
+                wig_long = other_orders.item.wig_long,
+                scalp_type = other_orders.item.scalp_type,
+                wig_color = other_orders.item.wig_color,
+                density = other_orders.item.density,
+                price = other_orders.item.price,
+                pieces_num = other_orders.quantity
+
+            )
+
+            new_bill2.save()
+
+
         order.ordered = True
-
-        # order_item.save()
         order.save()
 
 
 
-        messages.success(self.request, "The task was created successfully.")
-        return super(bill,self).form_valid(form)
-    
-    
-    
+        return super(bill2,self).form_valid(form)
+        messages.success(self.request, ".تم حفظ الفاتورة بنجاح")
 
-    def get_form_kwargs(self):
-        """ Passes the request object to the form class.
-         This is necessary to only display members that belong to a given user"""
+        
 
-        kwargs = super(bill, self).get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
-    
-    
-    
-    
+
+
+
+
+
+
 def show_bills(request):
-    bills = models.Billl.objects.all()
+    data = models.Bill2.objects.all()
 
-
-    phone = models.PhoneNumber.objects.get(phone = "8585858585")
-    acc = models.Account.objects.get(phone_number = phone)
-    print(acc.account_name)
-    print("***********************************************************************")
-
+    paginator = Paginator(data, 7)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'bills' : bills
-    }
+        'page_obj' : page_obj,
+        }
 
     return render(request, 'core/show_bills.html', context)
+
+
+
+
+
+# class show_bills(CreateView):
+    
+#     model = models.Bill2
+#     form_class = forms.BillForm2
+#     template_name = 'core/show_bills.html'
+#     success_url = reverse_lazy('all_bills')
+
+
+#     def get_form_kwargs(self):
+#         kwargs = super(show_bills, self).get_form_kwargs()
+#         kwargs['request'] = self.request
+#         return kwargs
+
+
+#     def get_context_data(self):
+#         context = super(show_bills, self).get_context_data()
+        
+
+#         data = models.Bill2.objects.all()
+
+#         paginator = Paginator(data, 1)
+#         page_number = self.request.GET.get('page')
+#         page_obj = paginator.get_page(page_number)
+        
+#         context = {
+#             'page_obj' : page_obj,
+#         }
+#         return context
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -595,4 +689,9 @@ def chart_data(request):
 
 
 def chart_view(request):
-    return render(request, 'core/chart.html')
+    my_bills = models.Bill2.objects.filter(seller=request.user)
+
+    context = {
+        'my_bills' : my_bills,
+    }
+    return render(request, 'core/chart.html', context)

@@ -54,6 +54,11 @@
                 </a>
                 <div class="dropdown-menu">
                   <a class="dropdown-item" href="{% url 'chart_view' %}">فواتيرى</a>
+
+                  {% if user.is_authenticated and user.is_superuser and user.is_staff %}
+                  <a class="dropdown-item" href="{% url 'all_bills' %}">كل الفواتير</a>                    
+                  {% endif %}
+
                   <a class="dropdown-item" href="{% url 'banks_and_payments' %}">البنوك والمدفوعات</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="#">صفحتى</a>

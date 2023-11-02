@@ -42,5 +42,84 @@
     });
 </script>
 
+
+
+
+
+
+<section class="shop_section layout_padding" style="margin-top: -8%;">
+    <div class="container">
+      <div class="row">
+
+
+
+        <table class="table table-striped" dir='rtl'>
+            <thead style="text-align: center;">
+              <tr style="text-align: center; font-size: small;">
+                <th scope="col">الترتيب</th>
+                <th scope="col">اسم البائع</th>
+                <th scope="col">رقم الهاتف </th>
+                <th scope="col">الدولة</th>
+                <th scope="col">العنوان</th>
+                <th scope="col">اسم العميل</th>
+                <th scope="col">رقم هاتف العميل</th>
+                <th scope="col">اسم الحساب</th>
+                <th scope="col">  التاريخ</th>
+    
+                <th scope="col">نوع الباروكه</th>
+                <th scope="col">الطول</th>
+                <th scope="col">نوع الفروة</th>
+                <th scope="col">اللون</th>
+                <th scope="col">الكثافة</th>
+    
+    
+                <th scope="col">عدد القطع</th>
+                <th scope="col">سعر القطعة</th>
+                <th scope="col">السعر الكلى</th>
+    
+              </tr>
+            </thead>
+            <tbody style="text-align: center;">
+    
+              
+              {% for bill in my_bills %}
+              <tr style="font-size: small;">
+                <th scope="row" class="mt-1">{{forloop.counter}}</th>
+                <td>{{bill.seller}}</td>
+                <td>{{bill.seller_phone_number}}</td>
+                <td>{{bill.country}}</td>
+                <td>{{bill.address}}</td>
+                <td>{{bill.customer_name}}</td>
+                <td>{{bill.customer_phone}}</td>
+                <td>{{bill.account_name}}</td>
+                <td>{{bill.date|date}}</td>
+    
+    
+                <td>{{bill.wig_type}}</td>
+                <td>{{bill.wig_long}}</td>
+                <td>{{bill.scalp_type}}</td>
+                <td>{{bill.wig_color}}</td>
+                <td>{{bill.density}}</td>
+                <td>{{bill.pieces_num}}</td>
+                <td>{{bill.price}}</td>
+                <td>{{bill.total_price}}</td>
+                
+    
+    
+              </tr>
+    
+              {% empty %}
+              <tr>
+                  <td colspan='10' style="font-size:large; text-align: center;">ليس لديك اى منتجات برجاء التواصل مع أحد اعضاء الادارة</td>
+              </tr>
+              {% endfor %}
+    
+            </tbody>
+        </table>
+
+    
+  </section>
+
+
 {% endblock content %}
     

@@ -26,33 +26,33 @@
                       <div class="row g-3">
                           <div class="col-12 col-sm-2">
                               <div class="form-group">
-                                  {{form.wig_type}}
+                                  {{form.seller}}
                               </div>
                           </div>
 
                           <div class="col-12 col-sm-2">
                               <div class="form-group">
-                                  {{form.wig_long}} 
-                              </div>
-                          </div>
-
-
-                          <div class="col-12 col-sm-2">
-                              <div class="form-group">
-                                  {{form.scalp_type}}
+                                  {{form.seller_phone_number}} 
                               </div>
                           </div>
 
 
                           <div class="col-12 col-sm-2">
                               <div class="form-group">
-                                  {{form.wig_color}}
+                                  {{form.country}}
+                              </div>
+                          </div>
+
+
+                          <div class="col-12 col-sm-2">
+                              <div class="form-group">
+                                  {{form.customer_name}}
                               </div>
                           </div>
 
                           <div class="col-12 col-sm-2">
                               <div class="form-group">
-                                  {{form.density}}
+                                  {{form.customer_phone}}
                               </div>
                           </div>
 
@@ -85,32 +85,57 @@
 
       <table class="table table-striped" dir='rtl'>
         <thead style="text-align: center;">
-          <tr style="text-align: center">
+          <tr style="text-align: center; font-size: small;">
             <th scope="col">الترتيب</th>
             <th scope="col">اسم البائع</th>
             <th scope="col">رقم الهاتف </th>
             <th scope="col">الدولة</th>
             <th scope="col">العنوان</th>
+            <th scope="col">اسم العميل</th>
             <th scope="col">رقم هاتف العميل</th>
-            <th scope="col">  التاريخ</th>
-            <th scope="col">عدد القطع</th>
             <th scope="col">اسم الحساب</th>
+            <th scope="col">  التاريخ</th>
+
+            <th scope="col">نوع الباروكه</th>
+            <th scope="col">الطول</th>
+            <th scope="col">نوع الفروة</th>
+            <th scope="col">اللون</th>
+            <th scope="col">الكثافة</th>
+
+
+            <th scope="col">عدد القطع</th>
+            <th scope="col">سعر القطعة</th>
+            <th scope="col">السعر الكلى</th>
+
           </tr>
         </thead>
         <tbody style="text-align: center;">
 
           
-          {% for bill in bills %}
-          <tr>
+          {% for bill in page_obj %}
+          <tr style="font-size: small;">
             <th scope="row" class="mt-1">{{forloop.counter}}</th>
             <td>{{bill.seller}}</td>
             <td>{{bill.seller_phone_number}}</td>
             <td>{{bill.country}}</td>
             <td>{{bill.address}}</td>
+            <td>{{bill.customer_name}}</td>
             <td>{{bill.customer_phone}}</td>
-            <td>{{bill.date}}</td>
-            <td>{{bill.pieces_num}}</td>
             <td>{{bill.account_name}}</td>
+            <td>{{bill.date|date}}</td>
+
+
+            <td>{{bill.wig_type}}</td>
+            <td>{{bill.wig_long}}</td>
+            <td>{{bill.scalp_type}}</td>
+            <td>{{bill.wig_color}}</td>
+            <td>{{bill.density}}</td>
+            <td>{{bill.pieces_num}}</td>
+            <td>{{bill.price}}</td>
+            <td>{{bill.total_price}}</td>
+            
+
+
           </tr>
 
           {% empty %}
@@ -130,7 +155,7 @@
   </div>
 </section>
 
-<!-- <nav aria-label="Page navigation example" style="margin: auto; margin-top: 10px;">
+<nav aria-label="Page navigation example" style="margin: auto; margin-top: 10px;">
   <ul class="pagination justify-content-center" style="text-align: center;">
 
 
@@ -174,7 +199,7 @@
 
 
   </ul>
-</nav> -->
+</nav>
 
 
 

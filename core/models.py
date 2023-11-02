@@ -11,10 +11,8 @@ from django_countries.fields import CountryField
 
 
 
-# from phone_field import PhoneField
 
 # Create your models here.
-
 
 
 wig_name = (
@@ -152,7 +150,7 @@ class Order(models.Model):
     ordered_date = models.DateTimeField(default=timezone.now())
     done_ordered_time = models.DateTimeField(default=timezone.now())
     ordered = models.BooleanField(default=False)
-    billing_address = models.ForeignKey('Billl', on_delete=models.SET_NULL, blank=True, null=True)
+    billing_address = models.ForeignKey('Bill2', on_delete=models.SET_NULL, blank=True, null=True)
     coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL, blank=True, null=True)
     
     def __str__(self):
@@ -196,23 +194,56 @@ class Order(models.Model):
 
 
 
-class Billl(models.Model):
+# class Billl(models.Model):
+#     seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+#     seller_phone_number = models.CharField(max_length=31, null=True, blank=True)
+#     country = CountryField(multiple=False, blank_label="(select country)")
+#     address = models.CharField(max_length=200)
+#     customer_phone = models.CharField(max_length=31)
+#     date = models.DateTimeField(default=timezone.now())
+#     pieces_num = models.PositiveIntegerField(default=0)
+
+#     account_name = models.CharField(max_length=150, null=True, blank=True)
+
+#     # items = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+#     # slug = models.SlugField()
+    
+#     def __str__(self):
+#         return f"{self.seller}"
+
+
+
+class Bill2(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     seller_phone_number = models.CharField(max_length=31, null=True, blank=True)
     country = CountryField(multiple=False, blank_label="(select country)")
     address = models.CharField(max_length=200)
+    customer_name = models.CharField(max_length=200)
     customer_phone = models.CharField(max_length=31)
     date = models.DateTimeField(default=timezone.now())
-    pieces_num = models.PositiveIntegerField(default=0)
-
     account_name = models.CharField(max_length=150, null=True, blank=True)
 
-    # items = models.ForeignKey(Order, on_delete=models.CASCADE)
 
-    # slug = models.SlugField()
+    #Item details
+    wig_type = models.CharField(max_length=150, choices=wig_type, null=False)
+    wig_long = models.CharField(max_length=150, choices=wig_long, null=False)
+    scalp_type = models.CharField(max_length=150, choices=scalp_type, null=False)
+    wig_color = models.CharField(max_length=150, choices=wig_color, null=False)
+    density = models.CharField(max_length=150, choices=density, null=False)
+    price = models.IntegerField(default=1500)
+    pieces_num = models.PositiveIntegerField(default=0)
+
+    def total_price(self):
+        total = self.price * self.pieces_num
+        return total
+
+
     
     def __str__(self):
         return f"{self.seller}"
+    
+
 
 
 class Coupon(models.Model):
@@ -244,30 +275,6 @@ class Account(models.Model):
 
     def __str__(self):
         return f"{self.phone_number}"
-
-
-
-
-class Product(models.Model):
-    name = models.CharField(max_length=150, choices=wig_name, null=False)
-    wig_type = models.CharField(max_length=150, choices=wig_type, null=False)
-    wig_long = models.CharField(max_length=150, choices=wig_long, null=False)
-    scalp_type = models.CharField(max_length=150, choices=scalp_type, null=False)
-    wig_color = models.CharField(max_length=150, choices=wig_color, null=False)
-    density = models.CharField(max_length=150, choices=density, null=False)
-    
-    price = models.IntegerField(default=1500, validators=[MaxValueValidator(7000), MinValueValidator(400)])
-    # min_price = models.IntegerField(default=1500, validators=[MaxValueValidator(7000), MinValueValidator(400)])
-    # max_price = models.IntegerField(default=1500, validators=[MaxValueValidator(7000), MinValueValidator(400)])
-
-    quantity = models.PositiveIntegerField(null=False)
-    date = models.DateTimeField(auto_now_add=True, blank=True)
-
-
-
-    def __str__(self):
-        return f"{self.id} -- {self.name}"
-
 
 
 
