@@ -7,6 +7,8 @@ from django.utils import timezone
 from django_countries.fields import CountryField
 
 
+# from accounts.models import User
+
 
 
 
@@ -27,23 +29,45 @@ wig_type = (
 
 )
 
+# wig_long = (
+#     ("طول الباروكة", "طول الباروكة"),
+#     ('12 Inch', '12 Inch'),
+#     ('14 Inch', '14 Inch'),
+#     ('16 Inch', '16 Inch'),
+#     ('18 Inch', '18 Inch'),
+#     ('20 Inch', '20 Inch'),
+#     ('22 Inch', '22 Inch'),
+#     ('24 Inch', '24 Inch'),
+#     ('26 Inch', '26 Inch'),
+#     ('28 Inch', '28 Inch'),
+#     ('30 Inch', '30 Inch'),
+#     ('32 Inch', '32 Inch'),
+#     ('34 Inch', '34 Inch'),
+#     ('36 Inch', '36 Inch'),
+#     ('38 Inch', '38 Inch'),
+#     ('40 Inch', '40 Inch'),
+# )
 wig_long = (
     ("طول الباروكة", "طول الباروكة"),
-    ('12 Inch', '12 Inch'),
-    ('14 Inch', '14 Inch'),
-    ('16 Inch', '16 Inch'),
-    ('18 Inch', '18 Inch'),
-    ('20 Inch', '20 Inch'),
-    ('22 Inch', '22 Inch'),
-    ('24 Inch', '24 Inch'),
-    ('26 Inch', '26 Inch'),
-    ('28 Inch', '28 Inch'),
-    ('30 Inch', '30 Inch'),
-    ('32 Inch', '32 Inch'),
-    ('34 Inch', '34 Inch'),
-    ('36 Inch', '36 Inch'),
-    ('38 Inch', '38 Inch'),
-    ('40 Inch', '40 Inch'),
+    ('انش12', 'انش12'),
+    ('انش14', 'انش14'),
+    ('انش16', 'انش16'),
+    ('انش18', 'انش18'),
+    ('انش20', 'انش20'),
+    ('انش22', 'انش22'),
+    ('انش24', 'انش24'),
+    ('انش26', 'انش26'),
+    ('انش28', 'انش28'),
+    ('انش30', 'انش30'),
+    ('انش32', 'انش32'),
+    ('انش34', 'انش34'),
+    ('انش36', 'انش36'),
+    ('انش38', 'انش38'),
+    ('انش40', 'انش40'),
+
+
+    # ('انش12', 'انش12'),
+
 
 )
 
@@ -103,8 +127,6 @@ class Item(models.Model):
         return f"{self.id} -- {self.slug}"
 
     
-
-
     # def get_absolute_url(self):
     #     return reverse("core:product", kwargs={"slug": self.slug})
     
@@ -224,7 +246,6 @@ class Bill2(models.Model):
     date = models.DateTimeField(default=timezone.now())
     account_name = models.CharField(max_length=150, null=True, blank=True)
 
-
     #Item details
     wig_type = models.CharField(max_length=150, choices=wig_type, null=False)
     wig_long = models.CharField(max_length=150, choices=wig_long, null=False)
@@ -234,14 +255,17 @@ class Bill2(models.Model):
     price = models.IntegerField(default=1500)
     pieces_num = models.PositiveIntegerField(default=0)
 
+    def __str__(self):
+        return f"{self.seller}"
+    
+    
     def total_price(self):
         total = self.price * self.pieces_num
         return total
 
 
     
-    def __str__(self):
-        return f"{self.seller}"
+
     
 
 
@@ -250,12 +274,15 @@ class Coupon(models.Model):
     code = models.CharField(max_length=15)
     amount = models.FloatField(default=0.00)
 
-
     def __str__(self):
         return self.code
     
 
-
+class Phones(models.Model):
+    phone = models.CharField(max_length=31)
+    
+    def __str__(self):
+        return f"{self.phone}"
 
 class PhoneNumber(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -272,7 +299,6 @@ class Account(models.Model):
     marketer = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     phone_number = models.ForeignKey(PhoneNumber, on_delete=models.CASCADE, null=True, blank=True)
 
-
     def __str__(self):
         return f"{self.phone_number}"
 
@@ -287,8 +313,6 @@ class AddLink(models.Model):
     SAR_link = models.URLField(max_length=500, null=False, blank=False)
     AED_link = models.URLField(max_length=500, null=False, blank=False)
     date = models.DateTimeField(auto_now_add=True, blank=True)
-
-
 
     def __str__(self):
         return self.slug_link

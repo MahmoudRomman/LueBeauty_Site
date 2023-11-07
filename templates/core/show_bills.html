@@ -12,13 +12,13 @@
 
 
   
-<div class="container-xxl py-5">
-  <div class="container">
+<div class="container-xxl py-5" >
+  <div class="container" >
       <!-- <h1 class="text-center mb-4 wow fadeInUp" data-wow-delay="0.1s">اضافة منتج جديد الى المخزن</h1> -->
       <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
           
-          <div class="tab-content">
-              <div id="tab-1" class="tab-pane fade show p-0 active">
+          <div class="tab-content" >
+              <div id="tab-1" class="tab-pane fade show p-0 active" style="margin-bottom: -38px;">
 
 
                   <form method="POST" action="." enctype="multipart/form-data" dir="rtl">
@@ -26,40 +26,12 @@
                       <div class="row g-3">
                           <div class="col-12 col-sm-2">
                               <div class="form-group">
-                                  {{form.seller}}
+                                  {{form.today_day}}
                               </div>
                           </div>
-
-                          <div class="col-12 col-sm-2">
-                              <div class="form-group">
-                                  {{form.seller_phone_number}} 
-                              </div>
-                          </div>
-
-
-                          <div class="col-12 col-sm-2">
-                              <div class="form-group">
-                                  {{form.country}}
-                              </div>
-                          </div>
-
-
-                          <div class="col-12 col-sm-2">
-                              <div class="form-group">
-                                  {{form.customer_name}}
-                              </div>
-                          </div>
-
-                          <div class="col-12 col-sm-2">
-                              <div class="form-group">
-                                  {{form.customer_phone}}
-                              </div>
-                          </div>
-
-
 
                           <div class="btn_store_search col-12 col-sm-6">
-                              <input type="submit" value="بحث"  style="margin-right: 270%; height: 30pt; width: 30%; margin-top: -10%;">
+                              <input type="submit" value="بحث" style="margin-right: -60%; height: 30pt; width: 30%; border-color:wightblack; border-radius: 10px;" >
                           </div>
 
                       </div>
@@ -76,8 +48,8 @@
 <section class="shop_section layout_padding" style="margin-top: -8%;">
   <div class="container">
     <div class="heading_container heading_center">
-      <h2>
-        جميع الفواتير 
+      <h2 style="margin-right: 300px;">
+        جميع الفواتير خلال هذا الشهر
       </h2>
     </div>
     <div class="row">
@@ -112,37 +84,68 @@
         <tbody style="text-align: center;">
 
           
-          {% for bill in page_obj %}
-          <tr style="font-size: small;">
-            <th scope="row" class="mt-1">{{forloop.counter}}</th>
-            <td>{{bill.seller}}</td>
-            <td>{{bill.seller_phone_number}}</td>
-            <td>{{bill.country}}</td>
-            <td>{{bill.address}}</td>
-            <td>{{bill.customer_name}}</td>
-            <td>{{bill.customer_phone}}</td>
-            <td>{{bill.account_name}}</td>
-            <td>{{bill.date|date}}</td>
-
-
-            <td>{{bill.wig_type}}</td>
-            <td>{{bill.wig_long}}</td>
-            <td>{{bill.scalp_type}}</td>
-            <td>{{bill.wig_color}}</td>
-            <td>{{bill.density}}</td>
-            <td>{{bill.pieces_num}}</td>
-            <td>{{bill.price}}</td>
-            <td>{{bill.total_price}}</td>
+          
             
+          {% if data %}
+              {% for bill in data %}
+              <tr style="font-size: small;">
+                <th scope="row" class="mt-1">{{forloop.counter}}</th>
+                <td>{{bill.seller}}</td>
+                <td>{{bill.seller_phone_number}}</td>
+                <td>{{bill.country}}</td>
+                <td>{{bill.address}}</td>
+                <td>{{bill.customer_name}}</td>
+                <td>{{bill.customer_phone}}</td>
+                <td>{{bill.account_name}}</td>
+                <td>{{bill.date|date}}</td>
 
 
-          </tr>
+                <td>{{bill.wig_type}}</td>
+                <td>{{bill.wig_long}}</td>
+                <td>{{bill.scalp_type}}</td>
+                <td>{{bill.wig_color}}</td>
+                <td>{{bill.density}}</td>
+                <td>{{bill.pieces_num}}</td>
+                <td>{{bill.price}}</td>
+                <td>{{bill.total_price}}</td>
+              </tr>
 
-          {% empty %}
-          <tr>
-              <td colspan='10' style="font-size:large; text-align: center;">ليس لديك اى منتجات برجاء التواصل مع أحد اعضاء الادارة</td>
-          </tr>
-          {% endfor %}
+              {% empty %}
+              <tr>
+                <td colspan='18' style="font-size:large">لا يوجد فواتير</td>
+              </tr>
+              {% endfor %}
+          {% elif page_obj %}
+              {% for bill in page_obj %}
+              <tr style="font-size: small;">
+                <th scope="row" class="mt-1">{{forloop.counter}}</th>
+                <td>{{bill.seller}}</td>
+                <td>{{bill.seller_phone_number}}</td>
+                <td>{{bill.country}}</td>
+                <td>{{bill.address}}</td>
+                <td>{{bill.customer_name}}</td>
+                <td>{{bill.customer_phone}}</td>
+                <td>{{bill.account_name}}</td>
+                <td>{{bill.date|date}}</td>
+
+
+                <td>{{bill.wig_type}}</td>
+                <td>{{bill.wig_long}}</td>
+                <td>{{bill.scalp_type}}</td>
+                <td>{{bill.wig_color}}</td>
+                <td>{{bill.density}}</td>
+                <td>{{bill.pieces_num}}</td>
+                <td>{{bill.price}}</td>
+                <td>{{bill.total_price}}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan='18' style="font-size:large">لا يوجد فواتير</td>
+              </tr>
+              {% endfor %}
+          {% endif %}
+
+
 
         </tbody>
     </table>
@@ -153,8 +156,12 @@
 
     </div>
   </div>
+<h4 style="margin-left:43%;  align-items: center;">{{bills_num_this_month}} :عدد الفواتير خلال هذا الشهر</h4>
+
 </section>
 
+
+{% if page_obj %}
 <nav aria-label="Page navigation example" style="margin: auto; margin-top: 10px;">
   <ul class="pagination justify-content-center" style="text-align: center;">
 
@@ -200,8 +207,7 @@
 
   </ul>
 </nav>
-
-
+{% endif %}
 
 {% endblock content %}
   

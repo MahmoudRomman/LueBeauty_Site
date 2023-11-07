@@ -1,5 +1,7 @@
 from pathlib import Path
+from decouple import config
 import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,7 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-dm6vdkkbz3n0ti7t^o(f6eb#)n$)jr+0xjg^cheo=n*tn&s69f'
+# SECRET_KEY = 'django-insecure-dm6vdkkbz3n0ti7t^o(f6eb#)n$)jr+0xjg^cheo=n*tn&s69f'
+SECRET_KEY = config('sk')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -27,10 +31,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
     'django_countries',
     'phone_field',
 
     'core',
+    'accounts',
+
+
 ]
 
 MIDDLEWARE = [
@@ -129,3 +137,12 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+## Sending Emails...
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = config('user')
+EMAIL_HOST_PASSWORD = config('password')
+EMAIL_USE_TLS = True
+EMAIL_PORT = '587'

@@ -1,5 +1,9 @@
 from typing import Any
 from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.core.mail import EmailMessage
+from django.template import context
+from django.conf import settings
+from django.template.loader import render_to_string, get_template
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import CreateView
 from django.http import HttpRequest, HttpResponse, JsonResponse
@@ -14,6 +18,7 @@ import datetime, calendar
 from django.utils import timezone
 import string
 import random
+from django.contrib.auth.models import User
 
 
 
@@ -26,8 +31,15 @@ def create_slug_code():
 
 
 def home(request):
+    items = models.Item.objects.all()
 
-    return render(request, 'core/index.html')
+    context = {
+        'items' : items,
+    }
+
+
+    
+    return render(request, 'core/index.html', context)
 
 
 def store(request):
@@ -239,53 +251,109 @@ def shop(request):
 
 # This function used to set the item to the cart in addition update the product quantity in the store...
 # Done perfectly.....
-def add_to_cart(request, slug):
+# def add_to_cart(request, slug):
+#     # get the item
+#     item = get_object_or_404(models.Item, slug=slug)
 
+#     # create an order item or that order or get it if it exists
+#     order_item, created = models.OrderItem.objects.get_or_create(
+#         item=item,
+#         user=request.user,
+#         ordered=False
+#         )
+    
+#     order_qs = models.Order.objects.filter(user=request.user, ordered=False)
+#     if order_qs.exists():
+#         order = order_qs[0]
+#         # check if the orderitem is in the order
+#         if order.items.filter(item__slug = item.slug).exists():
+#             if item.quantity > 0:
+#                 order_item.quantity += 1
+#                 order_item.save()
+
+#                 # Update the quantity for the item in the cart
+#                 models.Item.objects.filter(slug=slug).update(quantity = (item.quantity - 1))
+
+#                 messages.success(request, "تم تعديل الكمية لهذا المنتج بنجاح")
+#                 return redirect("order_summary")
+#             else:
+#                 messages.warning(request, "هذا المنتج خارج المخزن")
+#                 return redirect("shop")
+#         else:
+#             if item.quantity > 0:
+#                 order.items.add(order_item)
+#                 # Update the quantity for the item in the cart
+#                 models.Item.objects.filter(slug=slug).update(quantity = (item.quantity - 1))
+#                 messages.success(request, "تمت اضافة هذا المنتج الى السلة بنجاح" )
+#                 return redirect("order_summary")
+#             else:
+#                 messages.warning(request, "هذا المنتج خارج المخزن")
+#                 return redirect("shop")
+
+
+
+#     else: 
+#         if item.quantity > 0:
+
+#             # Update the quantity for the item in the cart
+#             models.Item.objects.filter(slug=slug).update(quantity = (item.quantity - 1))
+
+#             ordered_date = timezone.now()
+#             order = models.Order.objects.create(user=request.user, ordered_date=ordered_date)
+#             order.items.add(order_item)
+#             messages.success(request, "تمت اضافة هذا المنتج الى السلة بنجاح")
+#             redirect("shop")
+
+#             return redirect("order_summary")
+#         else:
+#             messages.warning(request, "هذا المنتج خارج المخزن")
+#             return redirect("shop")
+
+
+
+def add_to_cart(request, slug):
     # get the item
     item = get_object_or_404(models.Item, slug=slug)
-    
-    # create an order item or that order or get it if it exists
-    order_item, created = models.OrderItem.objects.get_or_create(
-        item=item,
-        user=request.user,
-        ordered=False
-        )
-    
-    order_qs = models.Order.objects.filter(user=request.user, ordered=False)
-    if order_qs.exists():
-        order = order_qs[0]
-        # check if the orderitem is in the order
-        if order.items.filter(item__slug = item.slug).exists():
-            if item.quantity > 0:
-                order_item.quantity += 1
-                order_item.save()
 
-                # Update the quantity for the item in the cart
-                models.Item.objects.filter(slug=slug).update(quantity = (item.quantity - 1))
+    if item.quantity == 0:
+        messages.warning(request, "هذا المنتج خارج المخزن")
+        return redirect("shop")
+    else:    
+        # create an order item or that order or get it if it exists
+        order_item, created = models.OrderItem.objects.get_or_create(
+            item=item,
+            user=request.user,
+            ordered=False
+            )
+        
+        order_qs = models.Order.objects.filter(user=request.user, ordered=False)
+        if order_qs.exists():
+            order = order_qs[0]
+            # check if the orderitem is in the order
+            if order.items.filter(item__slug = item.slug).exists():
+                if item.quantity > 0:
+                    order_item.quantity += 1
+                    order_item.save()
 
-                messages.success(request, "تم تعديل الكمية لهذا المنتج بنجاح")
-                return redirect("order_summary")
+                    # Update the quantity for the item in the cart
+                    models.Item.objects.filter(slug=slug).update(quantity = (item.quantity - 1))
+
+                    messages.success(request, "تم تعديل الكمية لهذا المنتج بنجاح")
+                    return redirect("order_summary")
+                else:
+                    messages.warning(request, "هذا المنتج خارج المخزن")
+                    return redirect("shop")
             else:
-                messages.warning(request, "هذا المنتج خارج المخزن")
-                return redirect("shop")
-        else:
-            if item.quantity > 0:
-                order.items.add(order_item)
-
-                # Update the quantity for the item in the cart
-                models.Item.objects.filter(slug=slug).update(quantity = (item.quantity - 1))
-
-                messages.success(request, "تمت اضافة هذا المنتج الى السلة بنجاح" )
-                return redirect("order_summary")
-            else:
-                messages.warning(request, "هذا المنتج خارج المخزن")
-                return redirect("shop")
-
-
-
-    else: 
-        if item.quantity > 0:
-
+                if item.quantity > 0:
+                    order.items.add(order_item)
+                    # Update the quantity for the item in the cart
+                    models.Item.objects.filter(slug=slug).update(quantity = (item.quantity - 1))
+                    messages.success(request, "تمت اضافة هذا المنتج الى السلة بنجاح" )
+                    return redirect("order_summary")
+                else:
+                    messages.warning(request, "هذا المنتج خارج المخزن")
+                    return redirect("shop")
+        else: 
             # Update the quantity for the item in the cart
             models.Item.objects.filter(slug=slug).update(quantity = (item.quantity - 1))
 
@@ -296,11 +364,8 @@ def add_to_cart(request, slug):
             redirect("shop")
 
             return redirect("order_summary")
-        else:
-            messages.warning(request, "هذا المنتج خارج المخزن")
-            return redirect("shop")
 
-
+            
 
 
 def remove_single_item_from_cart(request, slug):
@@ -329,6 +394,7 @@ def remove_single_item_from_cart(request, slug):
                 messages.success(request, ".تم تعديل الكمية لهذا المنتج")
                 return redirect("order_summary")
             else:
+                models.Item.objects.filter(slug=slug).update(quantity = (item.quantity + 1))
                 order.items.remove(order_item)
                 order_item.save()
                 messages.success(request, ".تم ازالة هذا المنتج من السلة")
@@ -374,6 +440,8 @@ def remove_from_cart(request, slug):
     else:
         messages.info(request, "!ليس لديك فاتورة")
         return redirect("shop")
+
+
 
 
 
@@ -447,11 +515,7 @@ def order_summary(request):
     
 
 
-
-
-
 class bill2(CreateView):
-    
     model = models.Bill2
     form_class = forms.BillForm2
     template_name = 'core/bill.html'
@@ -502,6 +566,7 @@ class bill2(CreateView):
 
 
 
+
         country = form.cleaned_data.get("country")
         address = form.cleaned_data.get("address")
         customer_phone = form.cleaned_data.get("customer_phone")
@@ -529,9 +594,53 @@ class bill2(CreateView):
 
             new_bill2.save()
 
+        order_items = order.items.all()
+        order_items.update(ordered = True)
+        for item in order_items:
+            item.save()
+
 
         order.ordered = True
         order.save()
+
+
+        from datetime import datetime
+
+        now = datetime.now()
+        
+
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
+
+        # # Sending mail
+        email = EmailMessage(
+        subject=f"New Bill From The LuxeBeauty Which Made By {self.request.user} at {dt_string}",
+        body="This one", 
+        from_email= settings.EMAIL_HOST_USER,
+        to=(settings.EMAIL_HOST_USER,),
+        reply_to=(settings.EMAIL_HOST_USER,),
+        )
+
+        email.send()
+
+
+        # New mail to be edited...
+        # data = {
+        #     "fname" : self.request.user,
+        #     "date" : dt_string,
+        # }
+
+        # message = get_template('doctor/email.html').render(data)
+        # email = EmailMessage(
+        #     "About your appointment with Med-Care Center.",
+        #     message,
+        #     settings.EMAIL_HOST_USER,
+        #     [settings.EMAIL_HOST_USER],
+        # )
+
+        # email.content_subtype = "html"
+        # email.send()
+
 
 
 
@@ -541,23 +650,76 @@ class bill2(CreateView):
         
 
 
-
-
-
-
-
 def show_bills(request):
-    data = models.Bill2.objects.all()
+    form = forms.BillFilterForAdmin()
 
-    paginator = Paginator(data, 7)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    today = datetime.date.today()
+
+
+
+    year = today.year
+    month = today.month
+
+    # my_bills = models.Bill2.objects.filter(seller=request.user, date__month=month, date__day=str(f"{bills_per_day+1}"))
+    data = models.Bill2.objects.filter(date__year = year, date__month = month)
+    bills_num_this_month = 0
+    for bill in data:
+        bills_num_this_month += bill.pieces_num
+
+
+    if request.method == "POST":
+        form = forms.BillFilterForAdmin(request.POST)
+        today_day = request.POST.get("today_day")
+
+        if today_day == "كل الايام":
+            data = models.Bill2.objects.filter(date__year = year, date__month = month)  
+            paginator = Paginator(data, 7)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            data = 0
+        else:
+            today_day = int(today_day)
+            data = models.Bill2.objects.filter(date__year = year, date__month = month, date__day = today_day)
+            page_obj = 0
+    else:
+        data = models.Bill2.objects.filter(date__year = year, date__month = month)
+        paginator = Paginator(data, 7)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        data = 0
+
+
+
+
+    # users = User.objects.all()
+
+    # for user in users:
+    #     phones = models.PhoneNumber.objects.filter(user=user.id)
+
+    #     for phone in phones:
+    #         bills = models.Bill2.objects.filter(seller_phone_number=phone.phone)
+    #         orders = models.Order.objects.filter(user=user.id, ordered=True)
+    #         cnt = 0
+    #         for order in orders:
+    #             cnt += int(order.get_total_items())
+    #         print(user.username)
+    #         print(phone.phone)
+    #         print(cnt)
+    #         print("-" * 20)
+
+
 
     context = {
         'page_obj' : page_obj,
+        'data' : data,
+        'bills_num_this_month' : bills_num_this_month,
+        'form' : form
         }
 
     return render(request, 'core/show_bills.html', context)
+
+
+
 
 
 
@@ -591,15 +753,6 @@ def show_bills(request):
 #             'page_obj' : page_obj,
 #         }
 #         return context
-
-
-
-
-
-
-
-
-
 
 
 
@@ -663,17 +816,28 @@ def delete_payment_link(request, slug):
 
 
 
+today = datetime.date.today()
+
+
 def chart_data(request):
 
-    year = 2023
-    month = 10
+    year = today.year
+    month = today.month
     num_days = calendar.monthrange(year, month)[1]
     days = [datetime.date(year, month, day) for day in range(1, num_days+1)]
     
+
     randomlist = []
-    for i in range(0,30):
-        n = random.randint(1,30)
-        randomlist.append(n)
+    today_in_month = int(today.day)
+
+    for bills_per_day in range(today_in_month):
+        my_bills = models.Bill2.objects.filter(seller=request.user, date__month=month, date__day=str(f"{bills_per_day+1}"))
+
+        peices = 0
+        for bill in my_bills:
+            peices += bill.pieces_num
+        randomlist.append(peices)
+
 
     labels = days
     values = randomlist
@@ -688,10 +852,32 @@ def chart_data(request):
     return JsonResponse(chart_data)
 
 
+
+
+
 def chart_view(request):
-    my_bills = models.Bill2.objects.filter(seller=request.user)
+    my_bills = models.Bill2.objects.filter(seller=request.user, date__month=today.month)
+
+
+    
+    total_bills = 0
+    for bill in my_bills:
+        total_bills += bill.pieces_num
+
+    salary = 0
+    if total_bills < 10:
+        salary = 2000
+    elif total_bills==10 or total_bills<20:
+        salary = total_bills*100 + 2000
+    elif total_bills==20 or total_bills<30:
+        salary = total_bills*150 + 2000
+    elif total_bills==30 or total_bills>30:
+        salary = total_bills*200 + 2000
+
 
     context = {
         'my_bills' : my_bills,
+        'total_bills' : total_bills,
+        'salary' : salary,
     }
     return render(request, 'core/chart.html', context)

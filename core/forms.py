@@ -394,3 +394,53 @@ class BillForm2(forms.ModelForm):
 
 
 
+
+# categories = models.JobCategory.objects.all()
+
+# categories_list = []
+# for c in categories:
+#     categories_list.append((str(c), str(c)))
+
+# categories_tuple = tuple(categories_list)
+
+# job_categories = models.JobCategory(categories_tuple)
+
+
+import datetime
+
+
+today = datetime.date.today()
+year = today.year
+month = today.month
+today_in_month = int(today.day)
+list_of_days = []
+list_of_days.append((str("كل الايام"), str("كل الايام")))
+
+
+for i in range(1, (today_in_month + 1)):
+    # list_of_days.append(i)
+    list_of_days.append((str(i), str(i)))
+list_of_days = tuple(list_of_days)
+
+
+
+
+
+class BillFilterForAdmin(forms.Form):
+    today_day = forms.ChoiceField(
+        choices=list_of_days,
+        required=True,
+        widget=forms.Select(attrs={
+        'class': 'form-control',
+        'type' : 'radio',
+        'label' : 'select one',
+        'style': 'border-color:wightblack; border-radius: 10px;',            
+
+        
+    }))
+
+
+
+
+
+

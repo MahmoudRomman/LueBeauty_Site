@@ -14,6 +14,8 @@ admin.site.register(models.Bill2)
 admin.site.register(models.Coupon)
 
 admin.site.register(models.PhoneNumber)
+admin.site.register(models.Phones)
+
 admin.site.register(models.Account)
 
 
