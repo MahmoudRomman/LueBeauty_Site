@@ -61,8 +61,8 @@
 
                   <a class="dropdown-item" href="{% url 'banks_and_payments' %}">البنوك والمدفوعات</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">صفحتى</a>
-                  <a class="dropdown-item" href="#">تسجيل الخروج</a>
+                  <a class="dropdown-item" href="{% url 'user-profile' %}">صفحتى</a>
+                  <a class="dropdown-item" href="{% url 'user-logout' %}">تسجيل الخروج</a>
                 </div>
               </li>
               {% endif %}
@@ -79,10 +79,19 @@
                 <i class="fa fa-shopping-bag" aria-hidden="true"></i>
               </a>
               {% else %}
-              <a href="">
-                <i class="fa fa-user" aria-hidden="true"></i>
+              <a href="{% url 'user-login' %}">
+                <!-- <i class="fa fa-user" aria-hidden="true"></i> -->
+                <img width="25" height="25" src="https://img.icons8.com/fluency/48/login-rounded-up.png" alt="login-rounded-up"/>
                 <span>
                   تسجيل الدخول
+                </span>
+              </a>
+
+              <a href="{% url 'user-register' %}">
+                <!-- <i class="fa fa-user" aria-hidden="true"></i> -->
+                <img width="25" height="25" src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/20/external-user-medical-kiranshastry-lineal-color-kiranshastry.png" alt="external-user-medical-kiranshastry-lineal-color-kiranshastry"/>
+                <span>
+                  انشاء حساب 
                 </span>
               </a>
               {% endif %}

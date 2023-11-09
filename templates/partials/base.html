@@ -16,6 +16,11 @@
   <meta name="author" content="" />
   <link rel="shortcut icon" href="{% static 'images/wig.png' %}" type="image/x-icon">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+
+
   <title>
     luxbeauty
   </title>
@@ -32,6 +37,14 @@
   <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
+  <script type="text/javascript">
+    function btn(){window.history.replace('user-logout')};
+    setTimeout("btn()", 0);
+    window.onunload=function(){null}; 
+  </script>
+
+
 </head>
 
 <body>
@@ -40,21 +53,6 @@
 
     {% include 'partials/header.html' %}
     <!-- end header section -->
-
-
-        
-    <!-- {% if messages %}
-        {% for message in messages %}
-        
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show  mt-3">
-                <a class="close" href="#" data-dismiss="alert">×</a>
-                  {{ message }}
-            </div>
-
-        {% endfor %}
-    {% endif %}  -->
-
-
     {% if messages %}
         {% for message in messages %}
         
@@ -111,7 +109,6 @@
         })
     });
   </script>
-
 </body>
 
 </html>

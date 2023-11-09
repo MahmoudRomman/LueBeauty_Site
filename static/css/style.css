@@ -424,6 +424,75 @@ a:focus {
 
 
 
+.profile_edit_button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-left: 300px;
+  margin-top: -40px;
+}
+
+
+.profile_edit_button a {
+  display: inline-block;
+  padding: 7px 30px;
+  background-color: #2471A3;
+  color: #ffffff;
+  border: 1px solid #2471A3;
+  border-radius: 5px;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+
+}
+
+
+
+.profile_edit_button a:hover {
+  background-color: transparent;
+  color: #2471A3;
+}
+
+
+
+.phone_edit_button{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-right: 300px;
+  margin-top: 10px;
+}
+
+
+.phone_edit_button a {
+  display: inline-block;
+  padding: 7px 30px;
+  background-color: #2471A3;
+  color: #ffffff;
+  border: 1px solid #2471A3;
+  border-radius: 5px;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+
+}
+
+
+
+.phone_edit_button a:hover {
+  background-color: transparent;
+  color: #2471A3;
+}
+
+
+
+
+
+
 
 
 .shop_section .add_to_cart_per_product {
@@ -842,6 +911,46 @@ margin: auto;
   background-color: transparent;
   color: #f16179;
 }
+
+
+
+
+
+
+
+
+.profile_edit_button{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  /* margin-top: 20px; */
+}
+
+
+.profile_edit_button input {
+  display: inline-block;
+  padding: 10px 40px;
+  background-color: #f16179;
+  color: #ffffff;
+  border: 1px solid #f16179;
+  border-radius: 5px;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  
+}
+
+
+
+.profile_edit_button input:hover {
+  background-color: transparent;
+  color: #f16179;
+}
+
+
+
 
 
 

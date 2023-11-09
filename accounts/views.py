@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+import importlib
 from . import forms
 from . import models
+from core.models import PhoneNumber
 from django.contrib import messages
-from django.views.decorators.cache import cache_control
 # Create your views here.
+
 
 
 def register(request):
@@ -13,8 +15,7 @@ def register(request):
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Account has been created for {username}... Continue to login.')
-            # redirect method takes a url not an html page name
+            messages.success(request, f'Thanks, {username} your account has been created, Login to continue.')
             return redirect('user-login')
     else:
         form = forms.CreateUserForm()
@@ -23,13 +24,23 @@ def register(request):
         'form': form
     }
 
-    return render(request, 'user/register.html', context)
+    return render(request, 'accounts/register.html', context)
 
 
+@login_required(login_url='user-login')
 def profile(request):
-    return render(request, 'user/profile.html')
+    profile = models.Profile.objects.get(staff=request.user)
+    my_phones = PhoneNumber.objects.filter(user=request.user)
+
+    context = {
+        'profile' : profile,
+        'my_phones' : my_phones,
+    }
+    return render(request, 'accounts/profile.html', context)
 
 
+
+@login_required(login_url='user-login')
 def profile_update(request):
     if request.method == 'POST':
         user_form = forms.UserUpdateForm(request.POST, instance=request.user)
@@ -47,8 +58,65 @@ def profile_update(request):
         'user_form': user_form,
         'profile_form': profile_form,
     }
-    return render(request, 'user/profile_update.html', context)
+    return render(request, 'accounts/profile_update.html', context)
+
+
+
+
+@login_required(login_url='user-login')
+def phone_update(request):
+    phone_update_form = forms.PhoneUpdate()
+    if request.method == "POST":
+        phone_update_form = forms.PhoneUpdate(request.POST or None)
+        if phone_update_form.is_valid():
+            # phone_update_form.save()
+
+            phones = phone_update_form.cleaned_data.get("new_phone")
+
+            for cnt in range(len(phones)):
+                # To check if the entered phone number is already save to the current user or not...
+                founded = PhoneNumber.objects.filter(user = request.user, phone = int(phones[cnt]))
+                # To reload this file --- forms.py file
+                importlib.reload(forms)
+
+
+                if founded:
+                    continue
+                else:
+                    new_user_phone = PhoneNumber.objects.create(user=request.user, phone=int(phones[cnt]))
+                    new_user_phone.save()
+            # To reload this file --- forms.py file
+            importlib.reload(forms)
+                
+            messages.success(request, ".تم حفظ التعديلات الارقام الخاصة بك")
+            return redirect("user-profile")
+        
+        
+    else:
+        phone_update_form = forms.PhoneUpdate()
+
+
+
+
+    context = {
+        'phone_update_form' : phone_update_form,
+    }
+
+    return render(request, 'accounts/phone_update.html', context)
+
+
+
+@login_required(login_url='user-login')
+def remove_phone(request, phone):
+    phone = PhoneNumber.objects.get(user=request.user, phone=phone)
+
+
+    if request.method == "POST":
+        phone.delete()
+        # To reload this file --- forms.py file
+        importlib.reload(forms)
+        messages.success(request, ".تم ازالة هذا الرقم من ملفك الشخصى")
+        return redirect("user-profile")
     
-
-
-
+    
+    return render(request, 'accounts/phone_deletion_confirm.html')

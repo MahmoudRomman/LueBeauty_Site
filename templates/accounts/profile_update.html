@@ -1,6 +1,7 @@
 {% extends 'partials/base.html' %}
 {% block title %} Home Page {% endblock title %}
-{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+
 
 {% block content %}
 <div class="container">
@@ -15,14 +16,18 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <span class="h4"> Profile Information</span>
+                            <span class="h4">ملعلومات الملف الشخصى</span>
                             <hr>
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                {{user_form|crispy}}
-                                {{profile_form|crispy}}
+                                {% bootstrap_form user_form %}
+                                {% bootstrap_form profile_form %}
 
-                                <input class="btn btn-info" type="submit" value="Update">
+
+                                <div class="profile_edit_button">
+                                    <input class="btn btn-info" type="submit" value="Save Update">
+                                </div>
+    
                             </form>
                         </div>
                     </div>

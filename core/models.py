@@ -284,9 +284,20 @@ class Phones(models.Model):
     def __str__(self):
         return f"{self.phone}"
 
+
+
+phones = Phones.objects.all()
+
+phones_list = []
+for c in phones:
+    phones_list.append((str(c), str(c)))
+
+phones_tuple = tuple(phones_list)
+
+
 class PhoneNumber(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=31)
+    phone = models.CharField(max_length=31, choices=phones_tuple, blank=False, null=False)
     
     def __str__(self):
         return f"{self.phone}"
@@ -296,7 +307,7 @@ class PhoneNumber(models.Model):
 class Account(models.Model):
     account_name = models.CharField(max_length=200)
     account_link = models.URLField(max_length=1000, null=False, blank=False)
-    marketer = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    marketer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     phone_number = models.ForeignKey(PhoneNumber, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):

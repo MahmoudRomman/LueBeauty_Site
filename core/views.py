@@ -1,5 +1,6 @@
 from typing import Any
 from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.template import context
 from django.conf import settings
@@ -42,6 +43,8 @@ def home(request):
     return render(request, 'core/index.html', context)
 
 
+
+@login_required(login_url='user-login')
 def store(request):
     if request.method == "POST":
         form = forms.ItemForm()
@@ -90,7 +93,7 @@ def store(request):
 
 
 
-
+@login_required(login_url='user-login')
 def add_item(request):
 
     form = forms.ItemForm(request.POST or None, request.FILES or None)
@@ -147,7 +150,7 @@ def add_item(request):
 
 
 
-
+@login_required(login_url='user-login')
 def edit_item_in_store(request, slug):
     item = models.Item.objects.get(slug=slug)
 
@@ -185,7 +188,7 @@ def edit_item_in_store(request, slug):
 
 
 
-
+@login_required(login_url='user-login')
 def delete_from_store(request, slug):
     item = models.Item.objects.get(slug=slug)
 
@@ -198,7 +201,7 @@ def delete_from_store(request, slug):
 
 
 
-
+@login_required(login_url='user-login')
 def shop(request):
     if request.method == "POST":
         form = forms.ItemForm()
@@ -310,7 +313,7 @@ def shop(request):
 #             return redirect("shop")
 
 
-
+@login_required(login_url='user-login')
 def add_to_cart(request, slug):
     # get the item
     item = get_object_or_404(models.Item, slug=slug)
@@ -367,7 +370,7 @@ def add_to_cart(request, slug):
 
             
 
-
+@login_required(login_url='user-login')
 def remove_single_item_from_cart(request, slug):
     # get the item
     item = get_object_or_404(models.Item, slug=slug)
@@ -410,7 +413,7 @@ def remove_single_item_from_cart(request, slug):
     
 
 
-
+@login_required(login_url='user-login')
 def remove_from_cart(request, slug):
     # get the item
     item = get_object_or_404(models.Item, slug=slug)
@@ -446,7 +449,7 @@ def remove_from_cart(request, slug):
 
 
 
-
+@login_required(login_url='user-login')
 def order_summary(request):
     try:
         order = models.Order.objects.get(user=request.user, ordered=False)
@@ -515,7 +518,15 @@ def order_summary(request):
     
 
 
-class bill2(CreateView):
+from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
+
+class LoginRequiredMixin(object):
+    def as_view(cls):
+        return login_required(super(LoginRequiredMixin, cls).as_view())
+    
+
+class bill2(CreateView, LoginRequiredMixin):
     model = models.Bill2
     form_class = forms.BillForm2
     template_name = 'core/bill.html'
@@ -649,7 +660,9 @@ class bill2(CreateView):
 
         
 
+from accounts.models import Profile
 
+@login_required(login_url='user-login')
 def show_bills(request):
     form = forms.BillFilterForAdmin()
 
@@ -691,22 +704,36 @@ def show_bills(request):
 
 
 
-    # users = User.objects.all()
+    # phone_bills_lst = [
+    #     [],
+    #     [],
+    #     []
+    # ]
+
+    # # users = User.objects.all()
+    # users = Profile.objects.all()
+    # # print(users)
 
     # for user in users:
-    #     phones = models.PhoneNumber.objects.filter(user=user.id)
+    #     if user.staff.user.username not in phone_bills_lst[0]:
+    #         phone_bills_lst[0].append(user.staff.user.username)
+    #     phones = models.PhoneNumber.objects.filter(user = request.user)
+
+
 
     #     for phone in phones:
-    #         bills = models.Bill2.objects.filter(seller_phone_number=phone.phone)
-    #         orders = models.Order.objects.filter(user=user.id, ordered=True)
+    #         if phone.phone not in phone_bills_lst[1]:
+    #             phone_bills_lst[1].append(phone.phone)
+    #         bills = models.Bill2.objects.filter(seller_phone_number = phone.phone)
+            
     #         cnt = 0
-    #         for order in orders:
-    #             cnt += int(order.get_total_items())
-    #         print(user.username)
-    #         print(phone.phone)
-    #         print(cnt)
-    #         print("-" * 20)
+    #         for bill in bills:
 
+    #             if bill.pieces_num !=0 :
+    #                 cnt += bill.pieces_num
+    #                 phone_bills_lst[2].append(int(cnt))
+
+    # print(phone_bills_lst)
 
 
     context = {
@@ -757,7 +784,7 @@ def show_bills(request):
 
 
 
-
+@login_required(login_url='user-login')
 def banks(request):
 
     links_data = models.AddLink.objects.all()
@@ -770,6 +797,7 @@ def banks(request):
 
 
 
+@login_required(login_url='user-login')
 def add_payment_link(request):
 
     form = forms.AddLinkForm(request.POST or None, request.FILES or None)
@@ -807,6 +835,7 @@ def add_payment_link(request):
 
 
 
+@login_required(login_url='user-login')
 def delete_payment_link(request, slug):
     models.AddLink.objects.filter(slug_link=slug).delete()
     messages.info(request, "item deleted successfully")
@@ -819,6 +848,7 @@ def delete_payment_link(request, slug):
 today = datetime.date.today()
 
 
+@login_required(login_url='user-login')
 def chart_data(request):
 
     year = today.year
@@ -854,7 +884,7 @@ def chart_data(request):
 
 
 
-
+@login_required(login_url='user-login')
 def chart_view(request):
     my_bills = models.Bill2.objects.filter(seller=request.user, date__month=today.month)
 
