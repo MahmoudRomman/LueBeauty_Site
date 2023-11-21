@@ -35,6 +35,9 @@ INSTALLED_APPS = [
     'django_countries',
     'phone_field',
     'bootstrap4',
+    'mathfilters',
+    'ckeditor',
+    'ckeditor_uploader',
 
     'core',
     'accounts',
@@ -65,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 'core.context_processors.get_account_name',
             ],
         },
     },
@@ -149,3 +153,27 @@ EMAIL_HOST_USER = config('user')
 EMAIL_HOST_PASSWORD = config('password')
 EMAIL_USE_TLS = True
 EMAIL_PORT = '587'
+
+
+
+
+
+
+
+# LANGUAGES = [
+#     ('en', ('English')),
+#     ('ar', ('Arabic')),
+# ]
+
+
+CKEDITOR_UPLOAD_PATH = "/media/"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': '100%',
+        'width': '100%',
+        'allowedContent': True,
+    },
+}
+

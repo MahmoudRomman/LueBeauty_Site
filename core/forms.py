@@ -1,6 +1,7 @@
 from collections.abc import Mapping
 from django import forms
 from . import models
+from django.contrib.auth.models import User
 from django.forms.utils import ErrorList
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
@@ -334,7 +335,7 @@ class BillForm2(forms.ModelForm):
                 'class': 'form-control',
                 'name' : 'country',
                 'type' : 'radio',
-                'style': 'border-color:wightblack; border-radius: 10px;'
+                'style': 'border-color:wightblack; border-radius: 15px;'
                 }))
         
         self.fields["address"] = forms.CharField(required=True, widget=forms.TextInput(attrs={
@@ -342,7 +343,7 @@ class BillForm2(forms.ModelForm):
             'type' : 'text',
             'size': "200",
             'placeholder': "ادخل العنوان",
-            'style': 'border-color:wightblack; border-radius: 10px;'
+            'style': 'border-color:wightblack; border-radius: 15px;'
         }))
 
 
@@ -350,7 +351,7 @@ class BillForm2(forms.ModelForm):
             'class': 'form-control',
             'size': "31",
             'placeholder': "ادخل رقم هاتف العميل",
-            'style': 'border-color:wightblack; border-radius: 10px;',
+            'style': 'border-color:wightblack; border-radius: 15px;',
         })
 
 
@@ -359,7 +360,7 @@ class BillForm2(forms.ModelForm):
             'class': 'form-control',
             'size': "200",
             'placeholder': "ادخل اسم العميل",
-            'style': 'border-color:wightblack; border-radius: 10px;',
+            'style': 'border-color:wightblack; border-radius: 15px;',
         })
 
         
@@ -382,7 +383,7 @@ class BillForm2(forms.ModelForm):
             'class': 'form-control',
             'type' : 'radio',
             'label' : 'select one',
-            'style': 'border-color:wightblack; border-radius: 10px;',            
+            'style': 'border-color:wightblack; border-radius: 15px;',            
         }))
 
 
@@ -390,20 +391,9 @@ class BillForm2(forms.ModelForm):
     class Meta:
          model = models.Bill2
          fields = ['seller', 'country', 'address', 'customer_phone', 'customer_name', 'seller_phone_number']
-        
 
 
 
-
-# categories = models.JobCategory.objects.all()
-
-# categories_list = []
-# for c in categories:
-#     categories_list.append((str(c), str(c)))
-
-# categories_tuple = tuple(categories_list)
-
-# job_categories = models.JobCategory(categories_tuple)
 
 
 import datetime
@@ -442,5 +432,35 @@ class BillFilterForAdmin(forms.Form):
 
 
 
+all_users = User.objects.all()
+
+users_list = []
+for c in all_users:
+    users_list.append((str(c), str(c)))
+
+users_tuple = tuple(users_list)
 
 
+
+
+# from ckeditor.widgets import CKEditorWidget
+
+class PenalityForm(forms.Form):
+    name = forms.ModelChoiceField(
+         queryset=User.objects.all(), 
+         empty_label="اختر أحد المستخدمين ...", 
+         widget=forms.Select(attrs={
+            'class': 'form-control',
+            'style': 'border-color:wightblack; border-radius: 10px;',  
+              }))
+    
+    message = forms.CharField(widget=forms.Textarea(attrs={
+    'class' : 'form-control',
+    'required' : True,
+    'cols' : 6,
+    'placeholder' : 'اكتب هنا نص الخَصم الذى تريد...',
+    'style': 'border-color:wightblack; border-radius: 10px;',  
+    }))
+
+    
+    

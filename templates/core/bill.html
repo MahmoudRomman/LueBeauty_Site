@@ -2,10 +2,12 @@
 
 {% block content %}
   <main>
-
+    <style>
+    </style>
     <div class="container-xxl py-5">
         <div class="container">
-            <h3 class="text-center mb-5 mt-5 wow fadeInUp" data-wow-delay="0.1s">برجاء الانتهاء من اجراءات الفاتورة</h3>
+            <h2 class="text-center mb-5 mt-5 wow fadeInUp" data-wow-delay="0.1s">برجاء الانتهاء من اجراءات الفاتورة</h2>
+            
             <hr class="col-12 col-sm-10" style="margin-left: auto; margin-right: auto">
             <br>
             <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
@@ -16,10 +18,8 @@
                             {% csrf_token %}
                             <div class="row g-3">
                                 
-                                <div class="col-12 col-sm-8" style="margin-left: auto; margin-right: auto; margin-bottom: -18px;">
-                                    <div class="form-group">
-                                        {{form.country}}
-                                    </div>
+                                <div class="col-12 col-sm-8" style="margin-left: auto; margin-right: auto; margin-bottom: -15px;">
+                                    <div class="form-group">{{form.country}}</div>    
                                 </div>
     
                                 
@@ -51,8 +51,8 @@
                                 </div>
 
 
-                                <div class="btn_bill_finish col-8 mr-1">
-                                    <input type="submit" value="حفظ الفاتورة" style="font-size:large; width: 250px; margin-left: 52%; margin-bottom: 5px;">
+                                <div class="btn_bill_finish col-12">
+                                    <input type="submit" value="حفظ الفاتورة" style="font-size:large; width: 250px; margin-bottom: 5px;">
                                 </div>
 
 

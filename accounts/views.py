@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 import importlib
 from . import forms
 from . import models
@@ -13,10 +14,16 @@ def register(request):
     if request.method == "POST":
         form = forms.CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Thanks, {username} your account has been created, Login to continue.')
-            return redirect('user-login')
+            email = form.cleaned_data.get('email')
+
+            if User.objects.filter(email=email).exists():
+                messages.warning(request, ".الايميل الذى قمت بتسجيله موجود بالفعل, من فضلك أعد التسجيل بعنوان ايميل أخر")
+                return redirect('user-register')
+            else:
+                form.save()
+                username = form.cleaned_data.get('username')
+                messages.success(request, f'.لقد قمت بانشاء حساب الان, للأستمرار برجاء تسجيل الدخول {username}')
+                return redirect('user-login')
     else:
         form = forms.CreateUserForm()
 

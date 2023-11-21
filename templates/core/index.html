@@ -1,5 +1,6 @@
 {% extends 'partials/base.html' %}
 {% load static %}
+{% load mathfilters %}
 
 
 
@@ -113,7 +114,7 @@
 
 
   <section class="shop_section layout_padding">
-    <div class="container">
+    <div class="container" style="max-width: 1400px;">
       <div class="heading_container heading_center">
         <h2>
            المنتجات المُضافه حديثاََ
@@ -122,14 +123,22 @@
       <div class="row">
 
         {% for item in items.all %}
-            <div class="col-md-4">
+            <div class="col-xl-3 col-12 col-sm-6 col-md-4" style="padding: 10px;">
               <div class="box">
                 
                   <div class="img-box">
                     <img src="{% static 'images/wig2.jpeg' %}" alt="">
                   </div>
+
                   <div style="text-align: center;">
-                    <h6> Price <span> ${{item.price}} </span> </h6>
+                    <p class="lead">
+                      {% if item.discount_price %}
+                        <span class="mr-1"> <del>${{ item.price }}</del> </span>
+                        <span>${{ item.price|sub:item.discount_price }}</span>                        
+                      {% else %}
+                        <span>${{item.price}} </span>
+                      {% endif %}
+                    </p>
                   </div>
 
                   <div style="text-align: center; margin-top: 15px;">
@@ -141,9 +150,24 @@
                   </div>
 
 
-                  <div class="new">
-                    <span> New </span>
-                  </div>
+                  
+                  {% if item in new_arrived_items %}
+                  <div class="new" style="text-align: center;">
+                    <span> وصل حديثاََ </span>
+                  </div>                    
+                  {% endif %}
+
+
+                  
+                  {% if item.discount_price  %}
+                  <div class="have_discount" style="text-align: center;">
+                    <!-- <span>خصم ${{item.discount_price}}</span> -->
+                    <span>خصم %{{item.discount_price|div:item.price|mul:100|floatformat:0}}</span>
+
+                  </div>                    
+                  {% endif %}
+                    
+
                 
               </div>
             </div>
@@ -174,6 +198,46 @@
   <!-- end gift section -->
 
 
+  
+  <section class="shop_section layout_padding">
+    <div class="container" style="max-width: 1400px;">
+      
+      <div class="row">
+            <div class="col-xl-3 col-12 col-sm-6 col-md-4" style="padding: 10px;">
+              <div class="box">
+                  <div style="text-align: center; margin-top: 15px;">
+                    <p>This is div This is div This is div This is div This is div This is div</p>
+                  </div>
+              </div>
+            </div>
+      
+
+      <div class="col-xl-3 col-12 col-sm-6 col-md-4" style="padding: 10px;">
+        <div class="box">
+            <div style="text-align: center; margin-top: 15px;">
+              <p>This is div This is div This is div This is div This is div This is div</p>
+            </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-12 col-sm-6 col-md-4" style="padding: 10px;">
+        <div class="box">
+            <div style="text-align: center; margin-top: 15px;">
+              <p>This is div This is div This is div This is div This is div This is div</p>
+            </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-12 col-sm-6 col-md-4" style="padding: 10px;">
+        <div class="box">
+            <div style="text-align: center; margin-top: 15px;">
+              <p>This is div This is div This is div This is div This is div This is div</p>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
 
 
 {% endblock content %}

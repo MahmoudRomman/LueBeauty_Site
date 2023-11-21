@@ -39,5 +39,9 @@ urlpatterns = [
     path('chart-data/', views.chart_data, name='chart_data'),
     path('chart/', views.chart_view, name='chart_view'),
 
+    path('add_penality/', views.penality, name='add_penality'),
+    path('show_all_penalities/', views.show_all_penalities, name='show_all_penalities'),
+    path('my_penalities/', views.user_penality, name='my_penalities'),
+    path('delete_penality/<slug>/', views.delete_penality, name='delete_penality'),
 
 ]

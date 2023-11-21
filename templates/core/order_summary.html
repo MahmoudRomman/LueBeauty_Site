@@ -50,15 +50,15 @@
                     </td>
 
                     <td>
-                    <!-- {% if order_item.item.discount_price %}
+                    {% if order_item.item.discount_price %}
                         ${{ order_item.get_total_discount_item_price }}
-                        <span class="badge badge-primary">Saving ${{ order_item.get_amount_saved }}</span>
+                        <span class="badge badge-primary">وفرت ${{ order_item.get_amount_saved }}</span>
                     {% else %}
                         ${{ order_item.get_total_item_price }}
-                    {% endif %} -->
+                    {% endif %}
                     
                     
-                    ${{ order_item.get_total_item_price }}
+                    <!-- ${{ order_item.get_total_item_price }} -->
 
                     </td>
                 </tr>
@@ -106,15 +106,17 @@
 
                 {% if object.get_total %}
                 <tr>
-                    <td colspan="9"><b>اجمالى عدد القطع</b></td>
-                    <td><b>{{object.get_total_items}}</b></td>
+                    <td><b>اجمالى عدد القطع</b></td>
+                    <td colspan="6"><b>{{object.get_total_items}}</b></td>
+                    <td colspan="10"></td>
                 </tr>
                 <tr>
-                    <td colspan="9"><b>السعر الكلى</b></td>
-                    <td><b>${{ object.get_total }}</b></td>
+                    <td><b>السعر الكلى</b></td>
+                    <td colspan="6"><b>${{ object.get_total }}</b></td>
+                    <td colspan="10"></td>
                 </tr>
                 <tr>
-                    <td colspan="9">
+                    <td colspan="10">
                         <div class="btn float-right">
                             <a href="{% url 'shop' %}">الاستمرار فى البيع</a>
                         </div> 

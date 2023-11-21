@@ -11,31 +11,12 @@
                 <hr>
                 <div class="alert alert-danger">
                     <h4>!! أنت على وشك ازالة هذا المنتج نهائياََ من المخزن</h4>
-
                 </div>
-
-<!-- 
-
-                <div class="btn float-right">
-                    <a href="{% url 'shop' %}">الاستمرار فى البيع</a>
-                </div> 
-
-                <div class="btn_go_to_bill float-right mt-2">
-                    <a href='#'>الانتهاء من الفاتورة</a>
-                </div>
-                 -->
                 <form method="POST">
                     {% csrf_token %}
                     {{form}}
-
-
-                        <a  class="back_to_store" href="{% url 'store' %}">التراجع</a>
-                    
-
-                    
-                        <input  class="btn_item_delete" type="submit" value="تأكيد الازالة">
-                
-
+                    <a  class="back_to_store" href="{% url 'store' %}">التراجع</a>
+                    <input  class="btn_item_delete" type="submit" value="تأكيد الازالة">
                 </form>
             </div>
         </div>

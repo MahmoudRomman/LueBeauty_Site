@@ -327,10 +327,13 @@ a:focus {
 }
 
 .shop_section .box {
-  background-color: #eeeeee;
+  background-color: #ffffff;
   position: relative;
   padding: 10px;
   margin-top: 25px;
+  border-color: #000000;
+  border-style: solid;
+  border-width: 1px;
 }
 
 .shop_section .box a {
@@ -377,7 +380,7 @@ a:focus {
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color: #ffffff;
+  background-color: #f9ece6;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -389,7 +392,31 @@ a:focus {
           align-items: center;
   border-radius: 100%;
   font-size: 15px;
+  /* color: #ffffff; */
 }
+
+
+
+.shop_section .box .have_discount {
+  width: 100px;
+  height: 30px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: burlywood;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 5%;
+  font-size: 15px;
+}
+
 
 .shop_section .btn-box {
   display: -webkit-box;
@@ -457,6 +484,14 @@ a:focus {
 
 
 
+
+
+
+
+
+
+
+
 .phone_edit_button{
   display: -webkit-box;
   display: -ms-flexbox;
@@ -464,7 +499,6 @@ a:focus {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  margin-right: 300px;
   margin-top: 10px;
 }
 
@@ -489,6 +523,36 @@ a:focus {
 }
 
 
+
+.login_button{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  
+}
+
+
+.login_button input {
+  display: inline-block;
+  padding: 7px 30px;
+  background-color: #2471A3;
+  color: #ffffff;
+  border: 1px solid #2471A3;
+  border-radius: 5px;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+
+}
+
+
+
+.login_button input:hover {
+  background-color: transparent;
+  color: #2471A3;
+}
 
 
 
@@ -568,6 +632,42 @@ a:focus {
 }
 
 
+
+
+
+
+.penality_btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+
+  text-align: center;
+  font-size: larger;  
+}
+
+
+.penality_btn a {
+  display: inline-block;
+  padding: 10px 40px;
+  background-color: #f16179;
+  color: #ffffff;
+  border: 1px solid #f16179;
+  border-radius: 5px;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  width: 300px;
+  
+}
+
+
+
+.penality_btn a:hover {
+  background-color: transparent;
+  color: #f16179;
+}
 
 
 
@@ -819,9 +919,9 @@ a:focus {
 .btn_save_link input {
   display: inline-block;
   padding: 10px 40px;
-  background-color: #27AE60;
+  background-color: #468B97;
   color: #ffffff;
-  border: 1px solid #27AE60;
+  border: 1px solid #468B97;
   border-radius: 5px;
   -webkit-transition: all .3s;
   transition: all .3s;
@@ -833,7 +933,7 @@ a:focus {
 
 .btn_save_link input:hover {
   background-color: transparent;
-  color: #27AE60;
+  color: #468B97;
 }
 
 
@@ -869,8 +969,6 @@ a:focus {
   background-color: transparent;
   color: #27AE60;
 }
-
-
 
 
 
@@ -919,6 +1017,42 @@ margin: auto;
 
 
 
+.btn_penality_add{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+
+margin: auto;
+}
+
+
+.btn_penality_add input {
+  display: inline-block;
+  padding: 10px 40px;
+  background-color: #f16179;
+  color: #ffffff;
+  border: 1px solid #f16179;
+  border-radius: 5px;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  
+}
+
+
+
+.btn_penality_add input:hover {
+  background-color: transparent;
+  color: #f16179;
+}
+
+
+
+
+
+
 .profile_edit_button{
   display: -webkit-box;
   display: -ms-flexbox;
@@ -949,6 +1083,38 @@ margin: auto;
   color: #f16179;
 }
 
+
+
+
+.profile_edit_button{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  /* margin-top: 20px; */
+}
+
+
+.profile_edit_button input {
+  display: inline-block;
+  padding: 10px 40px;
+  background-color: #f16179;
+  color: #ffffff;
+  border: 1px solid #f16179;
+  border-radius: 5px;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  
+}
+
+
+
+.profile_edit_button input:hover {
+  background-color: transparent;
+  color: #f16179;
+}
 
 
 
@@ -1503,3 +1669,12 @@ margin-top: 0px;
 
 /* end footer section*/
 /*# sourceMappingURL=style.css.map */
+
+
+
+
+.shop_section {
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+}

@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import reverse
 from django.utils import timezone
 from django_countries.fields import CountryField
+from ckeditor.fields import RichTextField
 
 
 # from accounts.models import User
@@ -29,24 +30,7 @@ wig_type = (
 
 )
 
-# wig_long = (
-#     ("طول الباروكة", "طول الباروكة"),
-#     ('12 Inch', '12 Inch'),
-#     ('14 Inch', '14 Inch'),
-#     ('16 Inch', '16 Inch'),
-#     ('18 Inch', '18 Inch'),
-#     ('20 Inch', '20 Inch'),
-#     ('22 Inch', '22 Inch'),
-#     ('24 Inch', '24 Inch'),
-#     ('26 Inch', '26 Inch'),
-#     ('28 Inch', '28 Inch'),
-#     ('30 Inch', '30 Inch'),
-#     ('32 Inch', '32 Inch'),
-#     ('34 Inch', '34 Inch'),
-#     ('36 Inch', '36 Inch'),
-#     ('38 Inch', '38 Inch'),
-#     ('40 Inch', '40 Inch'),
-# )
+
 wig_long = (
     ("طول الباروكة", "طول الباروكة"),
     ('انش12', 'انش12'),
@@ -112,9 +96,7 @@ class Item(models.Model):
     density = models.CharField(max_length=150, choices=density, null=False)
     
     price = models.IntegerField(default=1500, validators=[MaxValueValidator(7000), MinValueValidator(400)])
-    # min_price = models.IntegerField(default=1500, validators=[MaxValueValidator(7000), MinValueValidator(400)])
-    # max_price = models.IntegerField(default=1500, validators=[MaxValueValidator(7000), MinValueValidator(400)])
-
+    
     quantity = models.PositiveIntegerField(null=False)
     date = models.DateTimeField(auto_now_add=True, blank=True)
     discount_price = models.FloatField(default=0.00, blank=True, null=True)
@@ -123,7 +105,6 @@ class Item(models.Model):
 
 
     def __str__(self):
-        # return f"{self.id} -- {self.name} -- {self.slug}"
         return f"{self.id} -- {self.slug}"
 
     
@@ -152,10 +133,14 @@ class OrderItem(models.Model):
         return self.item.price * self.quantity
     
     def get_total_discount_item_price(self):
-        return self.item.discount_price * self.quantity
+        # return self.item.discount_price * self.quantity
+        return (self.item.price - self.item.discount_price) * self.quantity
+    
     
     def get_amount_saved(self):
-        return (self.item.price - self.item.discount_price) * self.quantity
+        # return (self.item.price - self.item.discount_price) * self.quantity
+        return (self.item.discount_price) * self.quantity
+    
 
     def get_final_price(self):
         if self.item.discount_price:
@@ -197,44 +182,6 @@ class Order(models.Model):
 
 
 
-# class Bill(models.Model):
-#     seller = models.ForeignKey(User, on_delete=models.CASCADE)
-#     # seller_phone_number = models.ForeignKey("PhoneNumber", on_delete=models.CASCADE, null=True, blank=True)
-#     seller_phone_number = models.CharField(max_length=31, null=True, blank=True)
-#     country = CountryField(multiple=False, blank_label="(select country)")
-#     address = models.CharField(max_length=200)
-#     customer_phone = models.CharField(max_length=31)
-#     date = models.DateTimeField(default=timezone.now())
-#     pieces_num = models.PositiveIntegerField(default=0)
-
-#     # items = models.ForeignKey(Order, on_delete=models.CASCADE)
-
-#     # slug = models.SlugField()
-    
-#     def __str__(self):
-#         return f"{self.seller}"
-
-
-
-# class Billl(models.Model):
-#     seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-#     seller_phone_number = models.CharField(max_length=31, null=True, blank=True)
-#     country = CountryField(multiple=False, blank_label="(select country)")
-#     address = models.CharField(max_length=200)
-#     customer_phone = models.CharField(max_length=31)
-#     date = models.DateTimeField(default=timezone.now())
-#     pieces_num = models.PositiveIntegerField(default=0)
-
-#     account_name = models.CharField(max_length=150, null=True, blank=True)
-
-#     # items = models.ForeignKey(Order, on_delete=models.CASCADE)
-
-#     # slug = models.SlugField()
-    
-#     def __str__(self):
-#         return f"{self.seller}"
-
-
 
 class Bill2(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -270,6 +217,7 @@ class Bill2(models.Model):
 
 
 
+
 class Coupon(models.Model):
     code = models.CharField(max_length=15)
     amount = models.FloatField(default=0.00)
@@ -277,6 +225,17 @@ class Coupon(models.Model):
     def __str__(self):
         return self.code
     
+
+
+class Offer(models.Model):
+    Offer = models.CharField(max_length=500)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.Offer
+    
+
+
 
 class Phones(models.Model):
     phone = models.CharField(max_length=31)
@@ -310,9 +269,9 @@ class Account(models.Model):
     marketer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     phone_number = models.ForeignKey(PhoneNumber, on_delete=models.CASCADE, null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.phone_number}"
 
+    def __str__(self):
+        return f"{self.account_name}"
 
 
 
@@ -327,3 +286,16 @@ class AddLink(models.Model):
 
     def __str__(self):
         return self.slug_link
+
+
+
+
+class Penality(models.Model):
+    name = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField(max_length=500)
+    slug_link = models.SlugField()
+    date = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f"{self.name} -- {self.date}"

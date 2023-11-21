@@ -12,6 +12,8 @@ admin.site.register(models.Bill2)
 
 
 admin.site.register(models.Coupon)
+admin.site.register(models.Offer)
+
 
 admin.site.register(models.PhoneNumber)
 admin.site.register(models.Phones)
@@ -20,8 +22,11 @@ admin.site.register(models.Account)
 
 
 
-# admin.site.register(models.Product)
 admin.site.register(models.AddLink)
+
+
+# New registerd model to add penalites to the users
+admin.site.register(models.Penality)
 
 
 

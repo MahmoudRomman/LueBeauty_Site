@@ -14,15 +14,25 @@
           </div>
           <div class="col-md-7">
             <div class="detail-box">
-              <div class="heading_container">
-                <h2>
+              <div class="heading_container" style="margin-top: 5%;">
+                <h1>
                   عروض اليوم من <br>
                   LuxBeauty
-                </h2>
+                </h1>
               </div>
-              <p>
-                هنا يمكنك الاطلاع على احدث عروض لليوم
-              </p>
+              
+              {% if offers %}
+              <hr>
+              
+              {% for offer in offers %}
+                <h5>{{offer}}</h5>
+                <hr>
+              {% endfor %}
+                
+              {% else %}
+              <h5>لا يوجد عروض اليوم</h5>
+              {% endif %}
+
               <div class="btn-box">
                 <a href="{% url 'shop' %}" class="btn1">
                   عرض جميع المنتجات

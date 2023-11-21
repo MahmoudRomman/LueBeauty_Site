@@ -2,6 +2,7 @@ from typing import Any
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
+from django.core.mail import send_mail
 from django.template import context
 from django.conf import settings
 from django.template.loader import render_to_string, get_template
@@ -31,11 +32,29 @@ def create_slug_code():
     return "".join(random.choices(string.ascii_lowercase + string.digits, k=20))
 
 
+
+
+
+today = datetime.date.today()
+month = today.month
+
+
 def home(request):
-    items = models.Item.objects.all()
+    from django.contrib.auth import authenticate
+    user = authenticate(username="admin", password="12345")
+    print("*"* 100)
+    print(user)
+
+    items = models.Item.objects.all().order_by('-date')
+
+    offers = models.Offer.objects.all().order_by('-date')[:3]
+
+    new_arrived_items = models.Item.objects.all().order_by('-date')[:3]
 
     context = {
         'items' : items,
+        'offers' : offers,
+        'new_arrived_items' : new_arrived_items,
     }
 
 
@@ -660,7 +679,6 @@ class bill2(CreateView, LoginRequiredMixin):
 
         
 
-from accounts.models import Profile
 
 @login_required(login_url='user-login')
 def show_bills(request):
@@ -702,38 +720,6 @@ def show_bills(request):
         data = 0
 
 
-
-
-    # phone_bills_lst = [
-    #     [],
-    #     [],
-    #     []
-    # ]
-
-    # # users = User.objects.all()
-    # users = Profile.objects.all()
-    # # print(users)
-
-    # for user in users:
-    #     if user.staff.user.username not in phone_bills_lst[0]:
-    #         phone_bills_lst[0].append(user.staff.user.username)
-    #     phones = models.PhoneNumber.objects.filter(user = request.user)
-
-
-
-    #     for phone in phones:
-    #         if phone.phone not in phone_bills_lst[1]:
-    #             phone_bills_lst[1].append(phone.phone)
-    #         bills = models.Bill2.objects.filter(seller_phone_number = phone.phone)
-            
-    #         cnt = 0
-    #         for bill in bills:
-
-    #             if bill.pieces_num !=0 :
-    #                 cnt += bill.pieces_num
-    #                 phone_bills_lst[2].append(int(cnt))
-
-    # print(phone_bills_lst)
 
 
     context = {
@@ -884,30 +870,125 @@ def chart_data(request):
 
 
 
+
 @login_required(login_url='user-login')
 def chart_view(request):
     my_bills = models.Bill2.objects.filter(seller=request.user, date__month=today.month)
 
+    bills_dict = {} 
+    for bill in my_bills:
+        if bill.seller_phone_number not in bills_dict:
+            bills_dict[str(bill.seller_phone_number)] = int(bill.pieces_num)
+        else:
+            bills_dict[str(bill.seller_phone_number)] += int(bill.pieces_num)
 
+
+    phone = models.PhoneNumber.objects.get(phone='33333333333333333')
+    account = models.Account.objects.get(phone_number=phone)
+
+
+    print("*" * 100)
+    print(phone)
+    print(account)
     
+
+    final_salary = 2000
+    for key, value in bills_dict.items():
+        salary = 0
+        
+        if value < 10:
+            salary = 0
+        elif value==10 or value<20:
+            salary = value*100 
+        elif value==20 or value<30:
+            salary = value*150 
+        elif value==30 or value>30:
+            salary = value*200 
+
+        final_salary += salary
+    
+
+
     total_bills = 0
     for bill in my_bills:
         total_bills += bill.pieces_num
 
-    salary = 0
-    if total_bills < 10:
-        salary = 2000
-    elif total_bills==10 or total_bills<20:
-        salary = total_bills*100 + 2000
-    elif total_bills==20 or total_bills<30:
-        salary = total_bills*150 + 2000
-    elif total_bills==30 or total_bills>30:
-        salary = total_bills*200 + 2000
+    # salary = 0
+    # if total_bills < 10:
+    #     salary = 2000
+    # elif total_bills==10 or total_bills<20:
+    #     salary = total_bills*100 + 2000
+    # elif total_bills==20 or total_bills<30:
+    #     salary = total_bills*150 + 2000
+    # elif total_bills==30 or total_bills>30:
+    #     salary = total_bills*200 + 2000
 
 
+    
     context = {
         'my_bills' : my_bills,
         'total_bills' : total_bills,
-        'salary' : salary,
+
+        'bills_dict' : bills_dict,
+        'final_salary' : final_salary,
     }
     return render(request, 'core/chart.html', context)
+
+
+
+
+def show_all_penalities(request):
+    penalities = models.Penality.objects.all().order_by('-date')
+
+    context = {
+        'penalities' : penalities,
+    }
+    return render(request, 'core/penalities.html', context)
+
+
+
+
+def penality(request):
+    form = forms.PenalityForm()
+
+    if request.method == "POST":
+        form = forms.PenalityForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data.get("name")
+            message = form.cleaned_data.get("message")
+
+            create_slug = create_slug_code()
+
+            new_user_penality = models.Penality.objects.create(
+                name = name,
+                message = message,
+                slug_link = create_slug,
+            )
+
+            new_user_penality.save()
+            messages.success(request, ".تم اضافة الخَصم لهذا المستخدم بنجاح")
+            return redirect("show_all_penalities")
+
+    context = {
+        'form' : form,
+    }
+    return render(request, 'core/add_penality.html', context)
+
+
+def user_penality(request):
+    my_penalities = models.Penality.objects.filter(name=request.user).order_by('-date')
+
+
+    context = {
+        'my_penalities' : my_penalities,
+    }
+
+    return render(request, 'core/user_penality.html', context)
+
+
+
+def delete_penality(request, slug):
+    penality = models.Penality.objects.filter(slug_link=slug)
+    penality.delete()
+    messages.success(request, ".تم ازالة الخَصم لهذا المستخدم بنجاح")
+    return redirect("show_all_penalities")
