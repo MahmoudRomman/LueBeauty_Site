@@ -3,9 +3,7 @@
 
 
 {% block content %}
-
   <!-- shop section -->
-
   <section class="shop_section layout_padding">
     <div class="container" style="max-width: 85%;">
       <div class="heading_container heading_center">
@@ -24,10 +22,6 @@
               </tr>
             </thead>
             <tbody>
-
-
-
-
                 {% for penality in my_penalities.all %}
                 <tr>
                     <th style="width: 150px;" scope="row">{{ forloop.counter }}</th>
@@ -42,13 +36,8 @@
             </tbody>
         </table>
       </div>
-
-
     </div>
   </section>
-
   <!-- end shop section -->
-
-
 {% endblock content %}
   

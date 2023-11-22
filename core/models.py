@@ -245,6 +245,8 @@ class Phones(models.Model):
 
 
 
+
+
 phones = Phones.objects.all()
 
 phones_list = []

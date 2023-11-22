@@ -113,6 +113,8 @@ def phone_update(request):
 
 
 
+
+
 @login_required(login_url='user-login')
 def remove_phone(request, phone):
     phone = PhoneNumber.objects.get(user=request.user, phone=phone)
@@ -127,3 +129,6 @@ def remove_phone(request, phone):
     
     
     return render(request, 'accounts/phone_deletion_confirm.html')
+
+
+

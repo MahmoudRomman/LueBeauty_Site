@@ -3,7 +3,7 @@
 
     <header class="header_section">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="{% url 'home' %}">
+          <!-- <a class="navbar-brand" href="{% url 'home' %}">
             <span>
               luxbeauty
 
@@ -12,7 +12,7 @@
           
           {% if user.is_authenticated %}
           <h5>Welcome, {{request.user.username}}</h5>
-          {% endif %}
+          {% endif %} -->
             
 
 
@@ -20,8 +20,25 @@
             <span class=""></span>
           </button>
   
-          <div class="collapse navbar-collapse" id="navbarSupportedContent" dir="rtl">
-            <ul class="navbar-nav" style="font-size:large">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent" dir="rtl" style="font-size: larger; text-align: center;">
+<!-- 
+            <div style="text-align: center;">
+              <a class="navbar-brand" href="{% url 'home' %}">
+                <span>
+                  luxbeauty
+    
+                </span>
+              </a>
+              
+              {% if user.is_authenticated %}
+              <h5>Welcome, {{request.user.username}}</h5>
+              {% endif %}
+            </div>
+             -->
+
+            <ul class="navbar-nav" style="margin-top: 2%; font-size: larger; text-align: center;">
+
+              
               <li class="nav-item active">
                 <a class="nav-link" href="{% url 'home' %}">الرئيسية <span class="sr-only">(current)</span></a>
               </li>
@@ -76,18 +93,18 @@
                 </div>
               </li>
               {% endif %}
+            </ul>
+            
+            <div class="user_option" style="margin-top: 2%; font-size: larger; text-align: center;">
+              
                 
 
-              
-            </ul>
-            <div class="user_option">
-              
-                
-              
               {% if user.is_authenticated %}
+
               <a href="{% url 'order_summary' %}">
                 <i class="fa fa-shopping-bag" aria-hidden="true"></i>
               </a>
+
               {% else %}
               <a href="{% url 'user-login' %}">
                 <i class="fa fa-sign-in" aria-hidden="true"></i>
@@ -105,10 +122,6 @@
                 </span>
               </a>
               {% endif %}
-
-                
-
-
 
               <!-- <form class="form-inline ">
                 <button class="btn nav_search-btn" type="submit">

@@ -37,7 +37,7 @@ def phones_func():
         all_phones_lst.append(int(phone.phone))
 
 
-    # To get only the tanke phone numbers bu users...
+    # To get only the tanke phone numbers by users...
     phone_taken_lst = []
     phone_taken = PhoneNumber.objects.all()
     for phone in phone_taken:
@@ -68,3 +68,9 @@ class PhoneUpdate(forms.Form):
         label = '..اختر أرقامك',  
         choices = phones_tuple,
         widget = forms.CheckboxSelectMultiple()) 
+
+
+
+
+
+
